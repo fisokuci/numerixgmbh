@@ -86,9 +86,9 @@ export default function Header() {
       <div className="container flex h-16 items-center justify-between">
         <a href="/" className="flex items-center gap-3">
           <img
-            src="https://cdn.builder.io/api/v1/image/assets%2Fce7645690fb141e988f52e43c3c13b94%2Ff3118d3a72e74c5a983e70b398f17313?format=webp&width=800"
+            src="./numerix_logo.png"
             alt="Numerix GmbH"
-            className="h-8 w-auto"
+            className="h-36 w-auto"
             loading="eager"
           />
         </a>
