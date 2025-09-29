@@ -7,7 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import type { ContactRequest, ContactResponse } from "@shared/api";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const HERO_URL = "/logo_header.jpeg";
+const HERO_URL = "./logo_header.jpeg";
 
 export default function Index() {
   const { lang } = useLanguage();
