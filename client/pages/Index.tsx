@@ -7,7 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import type { ContactRequest, ContactResponse } from "@shared/api";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const HERO_URL = "https://cdn.builder.io/api/v1/image/assets%2Fce7645690fb141e988f52e43c3c13b94%2F33d94d0157ab48389bbb945c7e5dfaa4?format=webp&width=800";
+const HERO_URL = "/logo_header.jpeg";
 
 export default function Index() {
   const { lang } = useLanguage();
@@ -54,12 +54,24 @@ export default function Index() {
           <div className="absolute inset-0 bg-gradient-to-b from-background/70 to-background/90" />
         </section>
 
-        <section className="container -mt-16 mb-12 rounded-xl border bg-background/90 p-6 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80 md:-mt-24 md:p-8">
-          <div className="mb-6 text-left">
-            <p className="mt-2 text-muted-foreground md:text-lg">
-              {lang === "de" ? "Experten in Treuhand, Versicherung Vorsorge und HR-Administration" : "Experts in fiduciary services, insurance, and HR administration"}
-            </p>
-          </div>
+            <section className="container -mt-16 mb-12 rounded-xl border bg-background/90 p-6 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80 md:-mt-24 md:p-8">
+              <div className="mb-6 text-left">
+                <p className="mt-2 text-muted-foreground md:text-lg">
+                  {lang === "de" ? (
+                    <>
+                      <span className="text-sky-400">Willkommen bei Numerix.</span>
+                      <br />
+                      Experten in Treuhand, Versicherung, Vorsorge und HR-Administration
+                    </>
+                  ) : (
+                    <>
+                      Welcome to Numerix.
+                      <br />
+                      Experts in fiduciary services, insurance, and HR administration
+                    </>
+                  )}
+                </p>
+              </div>
 
           <p className="mb-6 max-w-3xl text-balance text-muted-foreground md:text-base">
             {lang === "de" ? "Eine allgemeine Info: Unsere Website befindet sich derzeit im Aufbau, gerne können Sie uns über unser Kontaktformular kontaktieren." : "General info: Our website is currently under construction. Feel free to contact us via the form below."}
