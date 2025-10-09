@@ -7,7 +7,7 @@ export default defineConfig(({ command, mode }) => {
   const isDev = command === "serve";
 
   return {
-    base: "/numerixgmbh/",
+    base: '/',
 
     server: {
       host: "::",
