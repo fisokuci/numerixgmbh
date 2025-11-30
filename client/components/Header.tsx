@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
-import { Search, Menu } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const HIGHLIGHT_ATTR = "data-search-highlight";
 
@@ -27,7 +28,11 @@ function highlightIn(root: HTMLElement, query: string) {
     acceptNode(node) {
       const text = node.textContent ?? "";
       if (!text.trim()) return NodeFilter.FILTER_REJECT;
-      if ((node.parentElement && ["SCRIPT", "STYLE"].includes(node.parentElement.tagName))) return NodeFilter.FILTER_REJECT;
+      if (
+        node.parentElement &&
+        ["SCRIPT", "STYLE"].includes(node.parentElement.tagName)
+      )
+        return NodeFilter.FILTER_REJECT;
       return NodeFilter.FILTER_ACCEPT;
     },
   });
@@ -73,18 +78,42 @@ export default function Header() {
     const matches = highlightIn(main as HTMLElement, query);
     if (matches > 0) {
       const first = main.querySelector(`mark[${HIGHLIGHT_ATTR}]`);
-      (first as HTMLElement | null)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      (first as HTMLElement | null)?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
       setOpen(false);
-      toast({ title: lang === "de" ? "Suche" : "Search", description: `${matches} ${lang === "de" ? "Treffer" : "matches"}` });
+      toast({
+        title: lang === "de" ? "Suche" : "Search",
+        description: `${matches} ${lang === "de" ? "Treffer" : "matches"}`,
+      });
     } else {
-      toast({ title: lang === "de" ? "Keine Treffer" : "No matches", description: lang === "de" ? "Bitte einen anderen Begriff versuchen." : "Try another term." });
+      toast({
+        title: lang === "de" ? "Keine Treffer" : "No matches",
+        description:
+          lang === "de"
+            ? "Bitte einen anderen Begriff versuchen."
+            : "Try another term.",
+      });
     }
   };
+
+  const navItems = [
+    { href: "/#/", labelDe: "Home", labelEn: "Home" },
+    { href: "/#/uber-uns", labelDe: "Über uns", labelEn: "About Us" },
+    {
+      href: "/#/dienstleistungen",
+      labelDe: "Dienstleistungen",
+      labelEn: "Services",
+    },
+    { href: "/#/formulare", labelDe: "Formulare", labelEn: "Forms" },
+    { href: "/#/kontakt", labelDe: "Kontakt", labelEn: "Contact" },
+  ];
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <a href="/" className="flex items-center gap-3">
+        <a href="/#/" className="flex items-center gap-3">
           <img
             src="./numerix_logo.png"
             alt="Numerix GmbH"
@@ -93,8 +122,26 @@ export default function Header() {
           />
         </a>
 
+        <nav className="hidden md:flex items-center gap-1">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+            >
+              {lang === "de" ? item.labelDe : item.labelEn}
+            </a>
+          ))}
+        </nav>
+
         <div className="flex items-center gap-2">
-          <Dialog open={open} onOpenChange={(o)=>{ if(!o) clearHighlights(); setOpen(o); }}>
+          <Dialog
+            open={open}
+            onOpenChange={(o) => {
+              if (!o) clearHighlights();
+              setOpen(o);
+            }}
+          >
             <DialogTrigger asChild>
               <Button variant="ghost" aria-label="Search">
                 <Search />
@@ -106,8 +153,18 @@ export default function Header() {
                   {lang === "de" ? "Suche" : "Search"}
                 </p>
                 <div className="flex gap-2">
-                  <Input ref={inputRef} autoFocus placeholder={lang === "de" ? "Begriff eingeben..." : "Type to search..."} />
-                  <Button type="submit">{lang === "de" ? "Suchen" : "Search"}</Button>
+                  <Input
+                    ref={inputRef}
+                    autoFocus
+                    placeholder={
+                      lang === "de"
+                        ? "Begriff eingeben..."
+                        : "Type to search..."
+                    }
+                  />
+                  <Button type="submit">
+                    {lang === "de" ? "Suchen" : "Search"}
+                  </Button>
                 </div>
               </form>
             </DialogContent>
@@ -130,9 +187,26 @@ export default function Header() {
             </button>
           </div>
 
-          <Button variant="ghost" aria-label="Menu">
-            <Menu />
-          </Button>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" aria-label="Menu" className="md:hidden">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <div className="flex flex-col gap-4 py-4">
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+                  >
+                    {lang === "de" ? item.labelDe : item.labelEn}
+                  </a>
+                ))}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
