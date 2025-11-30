@@ -94,8 +94,8 @@ export default function Index() {
                   </div>
                 </div>
                 <div className="grid gap-1">
-                  <Label htmlFor="address">{lang === "de" ? "Adresse" : "Address"}</Label>
-                  <Input id="address" name="address" value={form.address} onChange={handleChange} placeholder={lang === "de" ? "Musterstrasse 1, Zürich" : "123 Main St, City"} required />
+                  <Label htmlFor="address">{lang === "de" ? "Email" : "Email"}</Label>
+                  <Input id="address" name="address" value={form.address} onChange={handleChange} placeholder={lang === "de" ? "max@email.ch" : "max@email.ch"} required />
                 </div>
                 <div className="pt-2">
                   <Button type="submit" disabled={loading} className="w-full md:w-auto">
