@@ -1,47 +1,68 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
 import type { ContactRequest, ContactResponse } from "@shared/api";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 const HERO_URL = "./logo_header.jpeg";
 
 export default function Contact() {
   const { lang } = useLanguage();
-  const [form, setForm] = useState<ContactRequest & { email?: string; phone?: string; message?: string }>({
-    name: "",
-    surname: "",
-    address: "",
-    email: "",
-    phone: "",
-    message: ""
-  });
+  const [form, setForm] = useState<ContactRequest & { message?: string }>({ name: "", surname: "", address: "", message: "" });
   const [loading, setLoading] = useState(false);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
+  const content = {
+    de: {
+      title: "Kontakt",
+      subtitle: "Wir freuen uns auf Ihre Nachricht",
+      description: "Haben Sie Fragen? Unser Team antwortet Ihnen schnellstmöglich.",
+      contactInfo: "Kontaktinformationen",
+      address: "Adresse",
+      addressValue: "Numerix GmbH\nZürich, Schweiz",
+      phone: "Telefon",
+      phoneValue: "+41 44 XXX XX XX",
+      email: "E-Mail",
+      emailValue: "info@numerix.ch",
+      hours: "Öffnungszeiten",
+      hoursValue: "Mo-Fr: 08:00 - 18:00",
+      formTitle: "Nachricht senden",
+      name: "Name",
+      surname: "Vorname",
+      addressLabel: "Adresse",
+      message: "Nachricht",
+      messagePlaceholder: "Ihre Nachricht...",
+      submit: "Abschicken",
+      sending: "Senden...",
+    },
+    en: {
+      title: "Contact",
+      subtitle: "We look forward to hearing from you",
+      description: "Have questions? Our team will get back to you as soon as possible.",
+      contactInfo: "Contact Information",
+      address: "Address",
+      addressValue: "Numerix GmbH\nZurich, Switzerland",
+      phone: "Phone",
+      phoneValue: "+41 44 XXX XX XX",
+      email: "Email",
+      emailValue: "info@numerix.ch",
+      hours: "Business Hours",
+      hoursValue: "Mon-Fri: 08:00 - 18:00",
+      formTitle: "Send us a message",
+      name: "Last name",
+      surname: "First name",
+      addressLabel: "Address",
+      message: "Message",
+      messagePlaceholder: "Your message...",
+      submit: "Submit",
+      sending: "Sending...",
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
+  const t = content[lang as keyof typeof content];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -52,10 +73,7 @@ export default function Contact() {
     e.preventDefault();
 
     if (!form.name || !form.surname || !form.address) {
-      toast({
-        title: lang === "de" ? "Fehlende Angaben" : "Missing information",
-        description: lang === "de" ? "Bitte alle erforderlichen Felder ausfüllen." : "Please fill in all required fields."
-      });
+      toast({ title: lang === "de" ? "Fehlende Angaben" : "Missing information" });
       return;
     }
 
@@ -64,286 +82,176 @@ export default function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          surname: form.surname,
-          address: form.address
-        })
+        body: JSON.stringify({ name: form.name, surname: form.surname, address: form.address }),
       });
       const data = (await res.json()) as ContactResponse;
-      if (!res.ok || !data.ok) throw new Error(data.message || "Submission failed");
+      if (!res.ok || !data.ok) throw new Error(data.message);
 
-      toast({
-        title: lang === "de" ? "Danke!" : "Thank you!",
-        description: data.message
-      });
-      setForm({
-        name: "",
-        surname: "",
-        address: "",
-        email: "",
-        phone: "",
-        message: ""
-      });
+      toast({ title: lang === "de" ? "Danke!" : "Thank you!", description: data.message });
+      setForm({ name: "", surname: "", address: "", message: "" });
     } catch (err: any) {
-      toast({
-        title: lang === "de" ? "Etwas ist schief gelaufen" : "Something went wrong",
-        description: err.message ?? (lang === "de" ? "Bitte erneut versuchen." : "Please try again.")
-      });
+      toast({ title: lang === "de" ? "Fehler" : "Error", description: err.message });
     } finally {
       setLoading(false);
     }
   };
 
-  const contactInfo = [
-    {
-      icon: MapPin,
-      titleDe: "Adresse",
-      titleEn: "Address",
-      contentDe: "Zürich, Switzerland",
-      contentEn: "Zurich, Switzerland",
-      gradient: "from-blue-500/20 to-cyan-500/20"
-    },
-    {
-      icon: Phone,
-      titleDe: "Telefon",
-      titleEn: "Phone",
-      contentDe: "+41 (0) 44 123 4567",
-      contentEn: "+41 (0) 44 123 4567",
-      gradient: "from-purple-500/20 to-pink-500/20"
-    },
-    {
-      icon: Mail,
-      titleDe: "Email",
-      titleEn: "Email",
-      contentDe: "info@numerix.ch",
-      contentEn: "info@numerix.ch",
-      gradient: "from-green-500/20 to-emerald-500/20"
-    },
-    {
-      icon: Clock,
-      titleDe: "Öffnungszeiten",
-      titleEn: "Hours",
-      contentDe: "Mo-Fr 08:00 - 17:00",
-      contentEn: "Mon-Fri 08:00 - 17:00",
-      gradient: "from-orange-500/20 to-amber-500/20"
-    }
+  const contacts = [
+    { icon: MapPin, label: t.address, value: t.addressValue },
+    { icon: Phone, label: t.phone, value: t.phoneValue, href: "tel:+41" },
+    { icon: Mail, label: t.email, value: t.emailValue, href: "mailto:info@numerix.ch" },
+    { icon: Clock, label: t.hours, value: t.hoursValue },
   ];
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-background via-background to-slate-900/5 overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 -left-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
-      </div>
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      <main className="flex flex-col">
+        {/* Hero Section */}
+        <section className="relative h-[45vh] min-h-[350px] w-full overflow-hidden flex items-center">
+          <img src={HERO_URL} alt={t.title} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "50% 12%" }} />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
 
-      <main className="relative flex flex-col">
-        <motion.section
-          className="relative h-[40svh] min-h-[300px] w-full overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <img
-            src={HERO_URL}
-            alt={lang === "de" ? "Kontakt" : "Contact"}
-            className="absolute inset-0 h-full w-full object-cover"
-            style={{ objectPosition: "50% 40%" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/70 to-background/90" />
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <div className="text-center">
-              <motion.h1
-                className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/80"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                {lang === "de" ? "Kontaktieren Sie uns" : "Get in Touch"}
-              </motion.h1>
-              <motion.p
-                className="mt-4 text-lg text-white/90 drop-shadow-md"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-              >
-                {lang === "de" ? "Wir freuen uns auf Ihre Anfrage" : "We look forward to your inquiry"}
-              </motion.p>
+          <div className="container relative z-10 max-w-2xl">
+            <div className="space-y-4">
+              <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
+                {t.title}
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                {t.subtitle}
+              </p>
             </div>
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
 
-        <motion.section
-          className="container -mt-16 mb-12 rounded-2xl border border-white/20 bg-white/5 p-6 shadow-2xl backdrop-blur-2xl md:-mt-24 md:p-10"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <div className="grid gap-12">
-            <motion.div variants={containerVariants} initial="hidden" animate="visible">
-              <div className="grid gap-4 md:grid-cols-2">
-                {contactInfo.map((info, idx) => {
-                  const Icon = info.icon;
-                  return (
-                    <motion.div
+        {/* Contact Grid */}
+        <section className="container my-20">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            {/* Contact Info */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-3xl font-bold mb-2">
+                  {t.contactInfo}
+                </h2>
+                <p className="text-muted-foreground">
+                  {t.description}
+                </p>
+              </div>
+
+              <div className="grid gap-4">
+                {contacts.map((contact, idx) => {
+                  const Icon = contact.icon;
+                  const content = (
+                    <div
+                      className="group relative rounded-2xl border border-border/50 bg-gradient-to-br from-background to-background/50 p-6 hover:border-primary/50 hover:bg-gradient-to-br hover:from-primary/5 transition-all"
                       key={idx}
-                      variants={itemVariants}
-                      whileHover={{ y: -4, transition: { duration: 0.3 } }}
                     >
-                      <div className={`group relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br ${info.gradient} p-6 backdrop-blur-xl hover:border-white/30 transition-all duration-300 shadow-xl`}>
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="relative flex gap-4">
-                          <motion.div
-                            whileHover={{ scale: 1.1, rotate: 5 }}
-                            transition={{ type: "spring", stiffness: 400 }}
-                          >
-                            <Icon className="h-6 w-6 text-cyan-400 flex-shrink-0 mt-1" />
-                          </motion.div>
-                          <div>
-                            <h4 className="font-bold text-white text-sm mb-1 group-hover:text-cyan-300 transition-colors">
-                              {lang === "de" ? info.titleDe : info.titleEn}
-                            </h4>
-                            <p className="text-gray-300 text-sm">
-                              {lang === "de" ? info.contentDe : info.contentEn}
-                            </p>
-                          </div>
+                      <div className="flex gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-muted-foreground">
+                            {contact.label}
+                          </p>
+                          <p className={`text-foreground font-medium whitespace-pre-line ${contact.href ? 'hover:text-primary transition-colors' : ''}`}>
+                            {contact.value}
+                          </p>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
+                  );
+
+                  return contact.href ? (
+                    <a href={contact.href} key={idx}>
+                      {content}
+                    </a>
+                  ) : (
+                    content
                   );
                 })}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="relative overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-8 backdrop-blur-xl shadow-xl"
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 opacity-0 hover:opacity-50 transition-opacity duration-300" />
-              <motion.h3
-                className="text-2xl font-bold mb-6 relative bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-              >
-                {lang === "de" ? "Nachricht senden" : "Send a Message"}
-              </motion.h3>
-              <form onSubmit={handleSubmit} className="grid gap-6 relative">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <motion.div className="grid gap-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
-                    <Label htmlFor="name" className="text-white">{lang === "de" ? "Name" : "Last Name"}</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder={lang === "de" ? "Schweizer" : "Doe"}
-                      required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400/50 focus:bg-white/20 transition-all duration-300"
-                    />
-                  </motion.div>
-                  <motion.div className="grid gap-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75 }}>
-                    <Label htmlFor="surname" className="text-white">{lang === "de" ? "Vorname" : "First Name"}</Label>
-                    <Input
-                      id="surname"
-                      name="surname"
-                      value={form.surname}
-                      onChange={handleChange}
-                      placeholder={lang === "de" ? "Anna" : "Jane"}
-                      required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400/50 focus:bg-white/20 transition-all duration-300"
-                    />
-                  </motion.div>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <motion.div className="grid gap-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
-                    <Label htmlFor="address" className="text-white">{lang === "de" ? "Email" : "Email"}</Label>
+            {/* Contact Form */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/0 rounded-3xl blur-2xl" />
+              <div className="relative rounded-3xl border border-primary/30 bg-gradient-to-br from-background/80 to-background p-8 md:p-10 backdrop-blur-sm">
+                <h3 className="text-2xl font-bold mb-6">
+                  {t.formTitle}
+                </h3>
+
+                <form onSubmit={handleSubmit} className="grid gap-5">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-sm font-medium">
+                        {t.name}
+                      </Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        className="rounded-xl border-border/50 bg-background/50 focus:border-primary transition-colors"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="surname" className="text-sm font-medium">
+                        {t.surname}
+                      </Label>
+                      <Input
+                        id="surname"
+                        name="surname"
+                        value={form.surname}
+                        onChange={handleChange}
+                        className="rounded-xl border-border/50 bg-background/50 focus:border-primary transition-colors"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="address" className="text-sm font-medium">
+                      {t.addressLabel}
+                    </Label>
                     <Input
                       id="address"
                       name="address"
-                      type="email"
                       value={form.address}
                       onChange={handleChange}
-                      placeholder="max@email.ch"
+                      className="rounded-xl border-border/50 bg-background/50 focus:border-primary transition-colors"
                       required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400/50 focus:bg-white/20 transition-all duration-300"
                     />
-                  </motion.div>
-                  <motion.div className="grid gap-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85 }}>
-                    <Label htmlFor="phone" className="text-white">{lang === "de" ? "Telefon" : "Phone"}</Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      value={form.phone}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-sm font-medium">
+                      {t.message}
+                    </Label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      value={form.message}
                       onChange={handleChange}
-                      placeholder="+41 44 123 4567"
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400/50 focus:bg-white/20 transition-all duration-300"
+                      placeholder={t.messagePlaceholder}
+                      rows={4}
+                      className="rounded-xl border-border/50 bg-background/50 focus:border-primary transition-colors resize-none"
                     />
-                  </motion.div>
-                </div>
-                <motion.div className="grid gap-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
-                  <Label htmlFor="message" className="text-white">{lang === "de" ? "Nachricht" : "Message"}</Label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                    placeholder={lang === "de" ? "Ihre Nachricht..." : "Your message..."}
-                    className="min-h-32 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-gray-400 focus:border-cyan-400/50 focus:bg-white/20 focus:outline-none transition-all duration-300 resize-none"
-                  />
-                </motion.div>
-                <motion.div className="pt-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.95 }}>
-                  <motion.button
+                  </div>
+
+                  <Button
                     type="submit"
                     disabled={loading}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full md:w-auto px-8 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 disabled:opacity-50 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="w-full rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold py-3 flex items-center justify-center gap-2 transition-all"
                   >
-                    {loading
-                      ? lang === "de"
-                        ? "Senden..."
-                        : "Sending..."
-                      : lang === "de"
-                        ? "Abschicken"
-                        : "Submit"}
-                  </motion.button>
-                </motion.div>
-              </form>
-            </motion.div>
-
-            <motion.div
-              className="relative overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-transparent p-8 backdrop-blur-xl shadow-xl"
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 opacity-0 hover:opacity-100 transition-opacity duration-300" />
-              <motion.h3
-                className="text-2xl font-bold mb-3 relative bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-              >
-                {lang === "de" ? "Schnelle Antwort" : "Quick Response"}
-              </motion.h3>
-              <p className="text-gray-300 leading-relaxed relative">
-                {lang === "de"
-                  ? "Wir werden Ihre Anfrage schnellstmöglich bearbeiten. In der Regel erhalten Sie innerhalb von 24 Stunden eine Rückmeldung von unserem Team."
-                  : "We will process your inquiry as quickly as possible. You will typically receive a response from our team within 24 hours."}
-              </p>
-            </motion.div>
+                    {loading ? t.sending : t.submit}
+                    {!loading && <ArrowRight className="w-4 h-4" />}
+                  </Button>
+                </form>
+              </div>
+            </div>
           </div>
-        </motion.section>
+        </section>
       </main>
     </div>
   );
