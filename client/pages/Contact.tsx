@@ -30,7 +30,7 @@ export default function Contact() {
       address: "Adresse",
       addressValue: "Numerix GmbH\nPratteln, Schweiz",
       phone: "Telefon",
-      phoneValue: "+41 79 862 62 23",
+      phoneValue: "+41 79 833 37 33",
       email: "E-Mail",
       emailValue: "info@numerixgmbh.ch",
       hours: "Öffnungszeiten",
