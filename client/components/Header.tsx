@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
-import { Search, Menu } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const HIGHLIGHT_ATTR = "data-search-highlight";
 
@@ -81,10 +82,18 @@ export default function Header() {
     }
   };
 
+  const navItems = [
+    { href: "/#/", labelDe: "Home", labelEn: "Home" },
+    { href: "/#/uber-uns", labelDe: "Über uns", labelEn: "About Us" },
+    { href: "/#/dienstleistungen", labelDe: "Dienstleistungen", labelEn: "Services" },
+    { href: "/#/formulare", labelDe: "Formulare", labelEn: "Forms" },
+    { href: "/#/kontakt", labelDe: "Kontakt", labelEn: "Contact" }
+  ];
+
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <a href="/" className="flex items-center gap-3">
+        <a href="/#/" className="flex items-center gap-3">
           <img
             src="./numerix_logo.png"
             alt="Numerix GmbH"
@@ -92,6 +101,18 @@ export default function Header() {
             loading="eager"
           />
         </a>
+
+        <nav className="hidden md:flex items-center gap-1">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+            >
+              {lang === "de" ? item.labelDe : item.labelEn}
+            </a>
+          ))}
+        </nav>
 
         <div className="flex items-center gap-2">
           <Dialog open={open} onOpenChange={(o)=>{ if(!o) clearHighlights(); setOpen(o); }}>
@@ -130,9 +151,26 @@ export default function Header() {
             </button>
           </div>
 
-          <Button variant="ghost" aria-label="Menu">
-            <Menu />
-          </Button>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" aria-label="Menu" className="md:hidden">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <div className="flex flex-col gap-4 py-4">
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+                  >
+                    {lang === "de" ? item.labelDe : item.labelEn}
+                  </a>
+                ))}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
