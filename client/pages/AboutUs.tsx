@@ -16,9 +16,9 @@ export default function AboutUs() {
       missionText:
         "Wir schaffen nachhaltige Lösungen, die Ihr Geschäft optimieren und Ihr Vermögen schützen.",
       stats: [
-        { number: "20+", label: "Jahre Erfahrung" },
-        { number: "500+", label: "Zufriedene Kunden" },
-        { number: "50+", label: "Experten im Team" },
+        { number: "10+", label: "Jahre Erfahrung" },
+        { number: "50+", label: "Zufriedene Kunden" },
+        { number: "3", label: "Experten im Team" },
       ],
       values: [
         {
