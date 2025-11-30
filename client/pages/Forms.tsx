@@ -1,12 +1,31 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Download, FileText, Download as DownloadIcon } from "lucide-react";
+import { Download as DownloadIcon, FileText } from "lucide-react";
 
 const HERO_URL = "./logo_header.jpeg";
 
 export default function Forms() {
   const { lang } = useLanguage();
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
 
   const forms = [
     {
@@ -84,130 +103,212 @@ export default function Forms() {
   ];
 
   const categories = [
-    { de: "Allgemein", en: "General", count: 1 },
-    { de: "Verträge", en: "Contracts", count: 1 },
-    { de: "Compliance", en: "Compliance", count: 1 },
-    { de: "Ermächtigungen", en: "Authorizations", count: 1 },
-    { de: "Finanz", en: "Finance", count: 1 },
-    { de: "Personal", en: "Personnel", count: 1 },
-    { de: "Steuern", en: "Taxes", count: 1 },
-    { de: "Versicherung", en: "Insurance", count: 1 },
-    { de: "Kundenservice", en: "Customer Service", count: 1 }
+    { de: "Allgemein", en: "General", count: 1, color: "from-blue-500/30 to-cyan-500/20" },
+    { de: "Verträge", en: "Contracts", count: 1, color: "from-purple-500/30 to-pink-500/20" },
+    { de: "Compliance", en: "Compliance", count: 1, color: "from-green-500/30 to-emerald-500/20" },
+    { de: "Ermächtigungen", en: "Authorizations", count: 1, color: "from-orange-500/30 to-amber-500/20" },
+    { de: "Finanz", en: "Finance", count: 1, color: "from-red-500/30 to-rose-500/20" },
+    { de: "Personal", en: "Personnel", count: 1, color: "from-cyan-500/30 to-sky-500/20" },
+    { de: "Steuern", en: "Taxes", count: 1, color: "from-indigo-500/30 to-violet-500/20" },
+    { de: "Versicherung", en: "Insurance", count: 1, color: "from-teal-500/30 to-cyan-500/20" },
+    { de: "Kundenservice", en: "Customer Service", count: 1, color: "from-pink-500/30 to-rose-500/20" }
   ];
 
   return (
-    <div className="relative min-h-screen bg-background">
-      <main className="flex flex-col">
-        <section className="relative h-[35svh] min-h-[250px] w-full overflow-hidden">
+    <div className="relative min-h-screen bg-gradient-to-b from-background via-background to-slate-900/5 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 -left-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
+      </div>
+
+      <main className="relative flex flex-col">
+        <motion.section
+          className="relative h-[40svh] min-h-[300px] w-full overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
           <img
             src={HERO_URL}
             alt={lang === "de" ? "Formulare" : "Forms"}
             className="absolute inset-0 h-full w-full object-cover"
             style={{ objectPosition: "50% 45%" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/70 to-background/90" />
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/70 to-background/90" />
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+              <motion.h1
+                className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/80"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
                 {lang === "de" ? "Allgemeine Formulare" : "General Forms"}
-              </h1>
-              <p className="mt-2 text-lg text-white/90 drop-shadow-md">
+              </motion.h1>
+              <motion.p
+                className="mt-4 text-lg text-white/90 drop-shadow-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
                 {lang === "de" ? "Wichtige Vorlagen für Ihre Verwaltung" : "Important templates for your administration"}
-              </p>
+              </motion.p>
             </div>
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
-        <section className="container -mt-16 mb-12 rounded-xl border bg-background/90 p-6 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80 md:-mt-24 md:p-8">
-          <div className="grid gap-8">
-            <div>
-              <h2 className="text-3xl font-bold mb-4">
+        <motion.section
+          className="container -mt-16 mb-12 rounded-2xl border border-white/20 bg-white/5 p-6 shadow-2xl backdrop-blur-2xl md:-mt-24 md:p-10"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <div className="grid gap-12">
+            <motion.div variants={containerVariants} initial="hidden" animate="visible">
+              <motion.h2
+                className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
+                variants={itemVariants}
+              >
                 {lang === "de" ? "Dokumentenvorlagen" : "Document Templates"}
-              </h2>
-              <p className="text-muted-foreground leading-relaxed max-w-3xl">
+              </motion.h2>
+              <motion.p
+                className="text-muted-foreground leading-relaxed max-w-3xl text-lg"
+                variants={itemVariants}
+              >
                 {lang === "de"
                   ? "Hier finden Sie eine Sammlung wichtiger Formulare und Vorlagen für Ihre administrative und geschäftliche Verwaltung. Diese Dokumente sind speziell für Beratungsdienstleistungen, Treuhand und HR-Administration entwickelt worden."
                   : "Here you will find a collection of important forms and templates for your administrative and business management. These documents have been specifically developed for consulting services, fiduciary and HR administration."}
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
 
-            <div>
-              <h3 className="text-xl font-bold mb-4">
+            <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+              <motion.h3
+                className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
+                variants={itemVariants}
+              >
                 {lang === "de" ? "Nach Kategorie" : "By Category"}
-              </h3>
-              <div className="grid gap-3 md:grid-cols-3">
+              </motion.h3>
+              <div className="grid gap-4 md:grid-cols-3">
                 {categories.map((cat, idx) => (
-                  <Button
+                  <motion.div
                     key={idx}
-                    variant="outline"
-                    className="justify-start h-auto py-3 px-4 text-left hover:border-sky-400 hover:bg-sky-400/5 transition-colors"
+                    variants={itemVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.3 } }}
                   >
-                    <div>
-                      <p className="font-medium">{lang === "de" ? cat.de : cat.en}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {cat.count} {lang === "de" ? "Formular" : "Form"}
-                      </p>
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold mb-4">
-                {lang === "de" ? "Alle Formulare" : "All Forms"}
-              </h3>
-              <div className="grid gap-4 md:grid-cols-2">
-                {forms.map((form, idx) => (
-                  <Card key={idx} className="backdrop-blur supports-[backdrop-filter]:bg-background/80 hover:border-sky-400/50 transition-colors flex flex-col">
-                    <CardHeader>
-                      <div className="flex gap-3 items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="text-lg">
-                            {lang === "de" ? form.titleDe : form.titleEn}
-                          </CardTitle>
-                          <p className="text-xs text-sky-400 mt-2 font-medium">
-                            {lang === "de" ? form.categoryDe : form.categoryEn}
-                          </p>
-                        </div>
-                        <FileText className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                    <div className={`group relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br ${cat.color} p-6 backdrop-blur-xl hover:border-white/30 transition-all duration-300 shadow-lg cursor-pointer`}>
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative">
+                        <p className="font-bold text-white group-hover:text-cyan-300 transition-colors">
+                          {lang === "de" ? cat.de : cat.en}
+                        </p>
+                        <p className="text-xs text-gray-300 mt-1">
+                          {cat.count} {lang === "de" ? "Formular" : "Form"}
+                        </p>
                       </div>
-                    </CardHeader>
-                    <CardContent className="flex-1">
-                      <p className="text-sm text-muted-foreground mb-4">
-                        {lang === "de" ? form.descDe : form.descEn}
-                      </p>
-                    </CardContent>
-                    <div className="px-6 pb-6">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full gap-2 hover:bg-sky-400/10 hover:border-sky-400"
-                      >
-                        <DownloadIcon className="h-4 w-4" />
-                        {lang === "de" ? "Herunterladen" : "Download"}
-                      </Button>
                     </div>
-                  </Card>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-gradient-to-r from-sky-400/10 to-blue-400/10 border border-sky-200/20 rounded-lg p-8">
-              <h3 className="text-xl font-bold mb-3">
+            <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}>
+              <motion.h3
+                className="text-3xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
+                variants={itemVariants}
+              >
+                {lang === "de" ? "Alle Formulare" : "All Forms"}
+              </motion.h3>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {forms.map((form, idx) => (
+                  <motion.div
+                    key={idx}
+                    variants={itemVariants}
+                    whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                  >
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl hover:border-white/40 transition-all duration-300 shadow-xl flex flex-col h-full">
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      
+                      <div className="relative p-6 flex-1 flex flex-col">
+                        <div className="flex gap-3 items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <h4 className="font-bold text-white text-lg group-hover:text-cyan-300 transition-colors leading-snug">
+                              {lang === "de" ? form.titleDe : form.titleEn}
+                            </h4>
+                            <motion.p
+                              className="text-xs text-cyan-400 mt-2 font-semibold"
+                              initial={{ opacity: 0.7 }}
+                              whileHover={{ opacity: 1 }}
+                            >
+                              {lang === "de" ? form.categoryDe : form.categoryEn}
+                            </motion.p>
+                          </div>
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ type: "spring", stiffness: 400 }}
+                          >
+                            <FileText className="h-6 w-6 text-cyan-400 flex-shrink-0" />
+                          </motion.div>
+                        </div>
+                        <p className="text-sm text-gray-300 mb-6 flex-1">
+                          {lang === "de" ? form.descDe : form.descEn}
+                        </p>
+                      </div>
+
+                      <div className="relative px-6 pb-6 pt-4 border-t border-white/10">
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-white/20 text-white hover:bg-gradient-to-r hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-white/40 py-2 px-4 text-sm font-medium transition-all duration-300"
+                        >
+                          <DownloadIcon className="h-4 w-4" />
+                          {lang === "de" ? "Herunterladen" : "Download"}
+                        </motion.button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="relative overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-transparent p-8 backdrop-blur-xl shadow-xl"
+              variants={itemVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 opacity-0 hover:opacity-100 transition-opacity duration-300" />
+              <motion.h3
+                className="text-2xl font-bold mb-3 relative bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
                 {lang === "de" ? "Nicht finden, was Sie suchen?" : "Can't find what you're looking for?"}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed mb-4">
+              </motion.h3>
+              <p className="text-gray-300 leading-relaxed mb-6 relative">
                 {lang === "de"
                   ? "Falls Sie ein bestimmtes Formular oder eine spezifische Vorlage benötigen, kontaktieren Sie unsere Spezialisten. Wir erstellen gerne kundenspezifische Formulare, die auf Ihre Anforderungen zugeschnitten sind."
                   : "If you need a specific form or custom template, please contact our specialists. We are happy to create custom forms tailored to your requirements."}
               </p>
-              <a href="/#/kontakt" className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 text-sm font-medium transition-colors">
+              <motion.a
+                href="/#/kontakt"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-600 hover:to-blue-600 h-10 px-6 py-2 text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
                 {lang === "de" ? "Kontakt aufnehmen" : "Get in Touch"}
-              </a>
-            </div>
+              </motion.a>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
       </main>
     </div>
   );
