@@ -1,5 +1,11 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Download, FileText, CheckCircle2, Search, ArrowRight } from "lucide-react";
+import {
+  Download,
+  FileText,
+  CheckCircle2,
+  Search,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -14,17 +20,20 @@ export default function Forms() {
     de: {
       title: "Formulare",
       subtitle: "Alle notwendigen Dokumentvorlagen",
-      description: "Laden Sie die benötigten Formulare herunter und senden Sie sie ausgefüllt an uns zurück.",
+      description:
+        "Laden Sie die benötigten Formulare herunter und senden Sie sie ausgefüllt an uns zurück.",
       forms: [
         {
           title: "Kundenaufnahmeformular",
-          description: "Grundlegende Informationen für die Kundenregistrierung und Profilerstellung.",
+          description:
+            "Grundlegende Informationen für die Kundenregistrierung und Profilerstellung.",
           category: "Allgemein",
           color: "bg-blue-500/20 text-blue-700",
         },
         {
           title: "Mandatsvertrag",
-          description: "Vertragsvorlage für die Beaufragung von Beratungsdienstleistungen.",
+          description:
+            "Vertragsvorlage für die Beaufragung von Beratungsdienstleistungen.",
           category: "Verträge",
           color: "bg-purple-500/20 text-purple-700",
         },
@@ -36,13 +45,15 @@ export default function Forms() {
         },
         {
           title: "Vollmachtsformular",
-          description: "Bevollmächtigungsformular für administrative und finanzielle Aufgaben.",
+          description:
+            "Bevollmächtigungsformular für administrative und finanzielle Aufgaben.",
           category: "Ermächtigungen",
           color: "bg-orange-500/20 text-orange-700",
         },
         {
           title: "Finanzielle Übersicht",
-          description: "Template zur Erfassung von Vermögenswerten und Verbindlichkeiten.",
+          description:
+            "Template zur Erfassung von Vermögenswerten und Verbindlichkeiten.",
           category: "Finanz",
           color: "bg-red-500/20 text-red-700",
         },
@@ -54,7 +65,8 @@ export default function Forms() {
         },
         {
           title: "Steuererklärungsformular",
-          description: "Vorlage für Einkommens- und Vermögensangaben zur Steuererklärung.",
+          description:
+            "Vorlage für Einkommens- und Vermögensangaben zur Steuererklärung.",
           category: "Steuern",
           color: "bg-indigo-500/20 text-indigo-700",
         },
@@ -69,11 +81,13 @@ export default function Forms() {
     en: {
       title: "Forms",
       subtitle: "All necessary document templates",
-      description: "Download the required forms and send them back to us completed.",
+      description:
+        "Download the required forms and send them back to us completed.",
       forms: [
         {
           title: "Client Intake Form",
-          description: "Basic information for customer registration and profile creation.",
+          description:
+            "Basic information for customer registration and profile creation.",
           category: "General",
           color: "bg-blue-500/20 text-blue-700",
         },
@@ -85,13 +99,15 @@ export default function Forms() {
         },
         {
           title: "Privacy Declaration",
-          description: "Privacy notification in accordance with applicable regulations.",
+          description:
+            "Privacy notification in accordance with applicable regulations.",
           category: "Compliance",
           color: "bg-green-500/20 text-green-700",
         },
         {
           title: "Power of Attorney",
-          description: "Authorization form for administrative and financial matters.",
+          description:
+            "Authorization form for administrative and financial matters.",
           category: "Authorizations",
           color: "bg-orange-500/20 text-orange-700",
         },
@@ -103,13 +119,15 @@ export default function Forms() {
         },
         {
           title: "HR Questionnaire",
-          description: "Questionnaire for HR data and personnel administration.",
+          description:
+            "Questionnaire for HR data and personnel administration.",
           category: "Personnel",
           color: "bg-cyan-500/20 text-cyan-700",
         },
         {
           title: "Tax Declaration Form",
-          description: "Template for income and asset information for tax declaration.",
+          description:
+            "Template for income and asset information for tax declaration.",
           category: "Taxes",
           color: "bg-indigo-500/20 text-indigo-700",
         },
@@ -129,7 +147,7 @@ export default function Forms() {
     (form) =>
       form.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       form.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      form.category.toLowerCase().includes(searchTerm.toLowerCase())
+      form.category.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -137,7 +155,12 @@ export default function Forms() {
       <main className="flex flex-col">
         {/* Hero Section */}
         <section className="relative h-[45vh] min-h-[350px] w-full overflow-hidden flex items-center">
-          <img src={HERO_URL} alt={t.title} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "50% 12%" }} />
+          <img
+            src={HERO_URL}
+            alt={t.title}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: "50% 12%" }}
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
 
           <div className="container relative z-10 max-w-2xl">
@@ -145,9 +168,7 @@ export default function Forms() {
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
                 {t.title}
               </h1>
-              <p className="text-xl text-muted-foreground">
-                {t.subtitle}
-              </p>
+              <p className="text-xl text-muted-foreground">{t.subtitle}</p>
             </div>
           </div>
         </section>
@@ -159,7 +180,9 @@ export default function Forms() {
             <div className="relative rounded-2xl border border-primary/30 bg-gradient-to-br from-background/80 to-background p-4 backdrop-blur-sm flex items-center gap-3">
               <Search className="w-5 h-5 text-muted-foreground flex-shrink-0" />
               <Input
-                placeholder={lang === "de" ? "Formulare durchsuchen..." : "Search forms..."}
+                placeholder={
+                  lang === "de" ? "Formulare durchsuchen..." : "Search forms..."
+                }
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="border-0 bg-transparent focus-visible:ring-0 text-lg"
@@ -188,7 +211,9 @@ export default function Forms() {
                         <h3 className="text-lg font-bold group-hover:text-primary transition-colors mb-2">
                           {form.title}
                         </h3>
-                        <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${form.color}`}>
+                        <span
+                          className={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${form.color}`}
+                        >
                           {form.category}
                         </span>
                       </div>
@@ -203,7 +228,9 @@ export default function Forms() {
                       variant="outline"
                       className="w-full rounded-xl border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all group/btn"
                       onClick={() => {
-                        alert(`${lang === "de" ? "Formular wird heruntergeladen" : "Form downloading"}: ${form.title}`);
+                        alert(
+                          `${lang === "de" ? "Formular wird heruntergeladen" : "Form downloading"}: ${form.title}`,
+                        );
                       }}
                     >
                       <Download className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
@@ -215,7 +242,9 @@ export default function Forms() {
             ) : (
               <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground">
-                  {lang === "de" ? "Keine Formulare gefunden." : "No forms found."}
+                  {lang === "de"
+                    ? "Keine Formulare gefunden."
+                    : "No forms found."}
                 </p>
               </div>
             )}
@@ -273,7 +302,9 @@ export default function Forms() {
 
                     <div className="relative">
                       <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center mb-4 group hover:scale-110 transition-transform">
-                        <span className="text-white text-3xl font-bold">{step.num}</span>
+                        <span className="text-white text-3xl font-bold">
+                          {step.num}
+                        </span>
                       </div>
                       <h3 className="font-bold text-lg mb-2">
                         {lang === "de" ? step.de : step.en}

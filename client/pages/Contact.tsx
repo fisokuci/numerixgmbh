@@ -12,14 +12,20 @@ const HERO_URL = "./logo_header.jpeg";
 
 export default function Contact() {
   const { lang } = useLanguage();
-  const [form, setForm] = useState<ContactRequest & { message?: string }>({ name: "", surname: "", address: "", message: "" });
+  const [form, setForm] = useState<ContactRequest & { message?: string }>({
+    name: "",
+    surname: "",
+    address: "",
+    message: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const content = {
     de: {
       title: "Kontakt",
       subtitle: "Wir freuen uns auf Ihre Nachricht",
-      description: "Haben Sie Fragen? Unser Team antwortet Ihnen schnellstmöglich.",
+      description:
+        "Haben Sie Fragen? Unser Team antwortet Ihnen schnellstmöglich.",
       contactInfo: "Kontaktinformationen",
       address: "Adresse",
       addressValue: "Numerix GmbH\nZürich, Schweiz",
@@ -41,7 +47,8 @@ export default function Contact() {
     en: {
       title: "Contact",
       subtitle: "We look forward to hearing from you",
-      description: "Have questions? Our team will get back to you as soon as possible.",
+      description:
+        "Have questions? Our team will get back to you as soon as possible.",
       contactInfo: "Contact Information",
       address: "Address",
       addressValue: "Numerix GmbH\nZurich, Switzerland",
@@ -64,7 +71,9 @@ export default function Contact() {
 
   const t = content[lang as keyof typeof content];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
   };
@@ -73,7 +82,9 @@ export default function Contact() {
     e.preventDefault();
 
     if (!form.name || !form.surname || !form.address) {
-      toast({ title: lang === "de" ? "Fehlende Angaben" : "Missing information" });
+      toast({
+        title: lang === "de" ? "Fehlende Angaben" : "Missing information",
+      });
       return;
     }
 
@@ -82,15 +93,25 @@ export default function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: form.name, surname: form.surname, address: form.address }),
+        body: JSON.stringify({
+          name: form.name,
+          surname: form.surname,
+          address: form.address,
+        }),
       });
       const data = (await res.json()) as ContactResponse;
       if (!res.ok || !data.ok) throw new Error(data.message);
 
-      toast({ title: lang === "de" ? "Danke!" : "Thank you!", description: data.message });
+      toast({
+        title: lang === "de" ? "Danke!" : "Thank you!",
+        description: data.message,
+      });
       setForm({ name: "", surname: "", address: "", message: "" });
     } catch (err: any) {
-      toast({ title: lang === "de" ? "Fehler" : "Error", description: err.message });
+      toast({
+        title: lang === "de" ? "Fehler" : "Error",
+        description: err.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -99,7 +120,12 @@ export default function Contact() {
   const contacts = [
     { icon: MapPin, label: t.address, value: t.addressValue },
     { icon: Phone, label: t.phone, value: t.phoneValue, href: "tel:+41" },
-    { icon: Mail, label: t.email, value: t.emailValue, href: "mailto:info@numerix.ch" },
+    {
+      icon: Mail,
+      label: t.email,
+      value: t.emailValue,
+      href: "mailto:info@numerix.ch",
+    },
     { icon: Clock, label: t.hours, value: t.hoursValue },
   ];
 
@@ -108,7 +134,12 @@ export default function Contact() {
       <main className="flex flex-col">
         {/* Hero Section */}
         <section className="relative h-[45vh] min-h-[350px] w-full overflow-hidden flex items-center">
-          <img src={HERO_URL} alt={t.title} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "50% 12%" }} />
+          <img
+            src={HERO_URL}
+            alt={t.title}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: "50% 12%" }}
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
 
           <div className="container relative z-10 max-w-2xl">
@@ -116,9 +147,7 @@ export default function Contact() {
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
                 {t.title}
               </h1>
-              <p className="text-xl text-muted-foreground">
-                {t.subtitle}
-              </p>
+              <p className="text-xl text-muted-foreground">{t.subtitle}</p>
             </div>
           </div>
         </section>
@@ -129,12 +158,8 @@ export default function Contact() {
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold mb-2">
-                  {t.contactInfo}
-                </h2>
-                <p className="text-muted-foreground">
-                  {t.description}
-                </p>
+                <h2 className="text-3xl font-bold mb-2">{t.contactInfo}</h2>
+                <p className="text-muted-foreground">{t.description}</p>
               </div>
 
               <div className="grid gap-4">
@@ -153,7 +178,9 @@ export default function Contact() {
                           <p className="text-sm font-semibold text-muted-foreground">
                             {contact.label}
                           </p>
-                          <p className={`text-foreground font-medium whitespace-pre-line ${contact.href ? 'hover:text-primary transition-colors' : ''}`}>
+                          <p
+                            className={`text-foreground font-medium whitespace-pre-line ${contact.href ? "hover:text-primary transition-colors" : ""}`}
+                          >
                             {contact.value}
                           </p>
                         </div>
@@ -176,9 +203,7 @@ export default function Contact() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/0 rounded-3xl blur-2xl" />
               <div className="relative rounded-3xl border border-primary/30 bg-gradient-to-br from-background/80 to-background p-8 md:p-10 backdrop-blur-sm">
-                <h3 className="text-2xl font-bold mb-6">
-                  {t.formTitle}
-                </h3>
+                <h3 className="text-2xl font-bold mb-6">{t.formTitle}</h3>
 
                 <form onSubmit={handleSubmit} className="grid gap-5">
                   <div className="grid md:grid-cols-2 gap-4">

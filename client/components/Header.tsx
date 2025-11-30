@@ -28,7 +28,11 @@ function highlightIn(root: HTMLElement, query: string) {
     acceptNode(node) {
       const text = node.textContent ?? "";
       if (!text.trim()) return NodeFilter.FILTER_REJECT;
-      if ((node.parentElement && ["SCRIPT", "STYLE"].includes(node.parentElement.tagName))) return NodeFilter.FILTER_REJECT;
+      if (
+        node.parentElement &&
+        ["SCRIPT", "STYLE"].includes(node.parentElement.tagName)
+      )
+        return NodeFilter.FILTER_REJECT;
       return NodeFilter.FILTER_ACCEPT;
     },
   });
@@ -74,20 +78,36 @@ export default function Header() {
     const matches = highlightIn(main as HTMLElement, query);
     if (matches > 0) {
       const first = main.querySelector(`mark[${HIGHLIGHT_ATTR}]`);
-      (first as HTMLElement | null)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      (first as HTMLElement | null)?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
       setOpen(false);
-      toast({ title: lang === "de" ? "Suche" : "Search", description: `${matches} ${lang === "de" ? "Treffer" : "matches"}` });
+      toast({
+        title: lang === "de" ? "Suche" : "Search",
+        description: `${matches} ${lang === "de" ? "Treffer" : "matches"}`,
+      });
     } else {
-      toast({ title: lang === "de" ? "Keine Treffer" : "No matches", description: lang === "de" ? "Bitte einen anderen Begriff versuchen." : "Try another term." });
+      toast({
+        title: lang === "de" ? "Keine Treffer" : "No matches",
+        description:
+          lang === "de"
+            ? "Bitte einen anderen Begriff versuchen."
+            : "Try another term.",
+      });
     }
   };
 
   const navItems = [
     { href: "/#/", labelDe: "Home", labelEn: "Home" },
     { href: "/#/uber-uns", labelDe: "Über uns", labelEn: "About Us" },
-    { href: "/#/dienstleistungen", labelDe: "Dienstleistungen", labelEn: "Services" },
+    {
+      href: "/#/dienstleistungen",
+      labelDe: "Dienstleistungen",
+      labelEn: "Services",
+    },
     { href: "/#/formulare", labelDe: "Formulare", labelEn: "Forms" },
-    { href: "/#/kontakt", labelDe: "Kontakt", labelEn: "Contact" }
+    { href: "/#/kontakt", labelDe: "Kontakt", labelEn: "Contact" },
   ];
 
   return (
@@ -115,7 +135,13 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Dialog open={open} onOpenChange={(o)=>{ if(!o) clearHighlights(); setOpen(o); }}>
+          <Dialog
+            open={open}
+            onOpenChange={(o) => {
+              if (!o) clearHighlights();
+              setOpen(o);
+            }}
+          >
             <DialogTrigger asChild>
               <Button variant="ghost" aria-label="Search">
                 <Search />
@@ -127,8 +153,18 @@ export default function Header() {
                   {lang === "de" ? "Suche" : "Search"}
                 </p>
                 <div className="flex gap-2">
-                  <Input ref={inputRef} autoFocus placeholder={lang === "de" ? "Begriff eingeben..." : "Type to search..."} />
-                  <Button type="submit">{lang === "de" ? "Suchen" : "Search"}</Button>
+                  <Input
+                    ref={inputRef}
+                    autoFocus
+                    placeholder={
+                      lang === "de"
+                        ? "Begriff eingeben..."
+                        : "Type to search..."
+                    }
+                  />
+                  <Button type="submit">
+                    {lang === "de" ? "Suchen" : "Search"}
+                  </Button>
                 </div>
               </form>
             </DialogContent>

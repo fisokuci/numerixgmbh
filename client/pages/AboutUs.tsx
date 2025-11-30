@@ -10,36 +10,69 @@ export default function AboutUs() {
     de: {
       title: "Über uns",
       subtitle: "Vertrauensvolle Partnerschaft seit Jahren",
-      description: "Numerix GmbH ist Ihr Spezialist für Unternehmens-, Finanz-, HR-, Steuer- und Versicherungsberatung sowie Treuhand- und Administrativdienstleistungen.",
+      description:
+        "Numerix GmbH ist Ihr Spezialist für Unternehmens-, Finanz-, HR-, Steuer- und Versicherungsberatung sowie Treuhand- und Administrativdienstleistungen.",
       mission: "Unsere Mission",
-      missionText: "Wir schaffen nachhaltige Lösungen, die Ihr Geschäft optimieren und Ihr Vermögen schützen.",
+      missionText:
+        "Wir schaffen nachhaltige Lösungen, die Ihr Geschäft optimieren und Ihr Vermögen schützen.",
       stats: [
         { number: "20+", label: "Jahre Erfahrung" },
         { number: "500+", label: "Zufriedene Kunden" },
         { number: "50+", label: "Experten im Team" },
       ],
       values: [
-        { icon: Zap, title: "Integrität", description: "Vollständige Transparenz und Ehrlichkeit in allen Geschäftsbeziehungen." },
-        { icon: Shield, title: "Fachkompetenz", description: "Umfassende Expertise durch kontinuierliche Weiterbildung." },
-        { icon: Users, title: "Verlässlichkeit", description: "Langfristige Partnerschaften mit persönlicher Betreuung." },
+        {
+          icon: Zap,
+          title: "Integrität",
+          description:
+            "Vollständige Transparenz und Ehrlichkeit in allen Geschäftsbeziehungen.",
+        },
+        {
+          icon: Shield,
+          title: "Fachkompetenz",
+          description:
+            "Umfassende Expertise durch kontinuierliche Weiterbildung.",
+        },
+        {
+          icon: Users,
+          title: "Verlässlichkeit",
+          description:
+            "Langfristige Partnerschaften mit persönlicher Betreuung.",
+        },
       ],
       cta: "Kontaktieren Sie uns",
     },
     en: {
       title: "About Us",
       subtitle: "Trusted partnership for years",
-      description: "Numerix GmbH is your specialist in corporate, financial, HR, tax and insurance consulting as well as fiduciary and administrative services.",
+      description:
+        "Numerix GmbH is your specialist in corporate, financial, HR, tax and insurance consulting as well as fiduciary and administrative services.",
       mission: "Our Mission",
-      missionText: "We create sustainable solutions that optimize your business and protect your assets.",
+      missionText:
+        "We create sustainable solutions that optimize your business and protect your assets.",
       stats: [
         { number: "20+", label: "Years Experience" },
         { number: "500+", label: "Satisfied Clients" },
         { number: "50+", label: "Team Experts" },
       ],
       values: [
-        { icon: Zap, title: "Integrity", description: "Complete transparency and honesty in all business relationships." },
-        { icon: Shield, title: "Expertise", description: "Comprehensive expertise through continuous professional development." },
-        { icon: Users, title: "Reliability", description: "Long-term partnerships with personal attention." },
+        {
+          icon: Zap,
+          title: "Integrity",
+          description:
+            "Complete transparency and honesty in all business relationships.",
+        },
+        {
+          icon: Shield,
+          title: "Expertise",
+          description:
+            "Comprehensive expertise through continuous professional development.",
+        },
+        {
+          icon: Users,
+          title: "Reliability",
+          description: "Long-term partnerships with personal attention.",
+        },
       ],
       cta: "Contact Us",
     },
@@ -52,7 +85,12 @@ export default function AboutUs() {
       <main className="flex flex-col">
         {/* Hero Section */}
         <section className="relative h-[50vh] min-h-[400px] w-full overflow-hidden flex items-center">
-          <img src={HERO_URL} alt={t.title} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "50% 12%" }} />
+          <img
+            src={HERO_URL}
+            alt={t.title}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: "50% 12%" }}
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
 
           <div className="container relative z-10 max-w-2xl">
@@ -105,7 +143,12 @@ export default function AboutUs() {
             </div>
             <div className="relative h-96 rounded-2xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent" />
-              <img src={HERO_URL} alt="Mission" className="w-full h-full object-cover" style={{ objectPosition: "50% 12%" }} />
+              <img
+                src={HERO_URL}
+                alt="Mission"
+                className="w-full h-full object-cover"
+                style={{ objectPosition: "50% 12%" }}
+              />
             </div>
           </div>
         </section>
@@ -129,9 +172,7 @@ export default function AboutUs() {
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <Icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold mb-3">
-                      {value.title}
-                    </h3>
+                    <h3 className="text-xl font-bold mb-3">{value.title}</h3>
                     <p className="text-muted-foreground leading-relaxed">
                       {value.description}
                     </p>
@@ -146,7 +187,11 @@ export default function AboutUs() {
         <section className="container mb-20">
           <div className="relative rounded-3xl overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/60" />
-            <div className={"absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"} />
+            <div
+              className={
+                'absolute inset-0 bg-[url(\'data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\')] opacity-40'
+              }
+            />
             <div className="relative z-10 px-8 md:px-12 py-12 md:py-16 text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 {lang === "de" ? "Bereit zu starten?" : "Ready to start?"}

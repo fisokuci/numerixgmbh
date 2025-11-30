@@ -1,5 +1,13 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Briefcase, Shield, Users, FileText, TrendingUp, Lock, ArrowRight } from "lucide-react";
+import {
+  Briefcase,
+  Shield,
+  Users,
+  FileText,
+  TrendingUp,
+  Lock,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const HERO_URL = "./logo_header.jpeg";
@@ -11,12 +19,14 @@ export default function Products() {
     de: {
       title: "Dienstleistungen",
       subtitle: "Umfassende Lösungen für Ihr Geschäft",
-      description: "Entdecken Sie unser breites Spektrum an professionellen Dienstleistungen.",
+      description:
+        "Entdecken Sie unser breites Spektrum an professionellen Dienstleistungen.",
       services: [
         {
           icon: Briefcase,
           title: "Unternehmensberatung",
-          description: "Strategische Optimierung von Geschäftsprozessen und Unternehmensführung.",
+          description:
+            "Strategische Optimierung von Geschäftsprozessen und Unternehmensführung.",
           color: "from-blue-500 to-blue-600",
         },
         {
@@ -28,7 +38,8 @@ export default function Products() {
         {
           icon: Users,
           title: "HR-Administration",
-          description: "Vollständige HR-Dienstleistungen von Personaladministration bis Lohnabrechnung.",
+          description:
+            "Vollständige HR-Dienstleistungen von Personaladministration bis Lohnabrechnung.",
           color: "from-purple-500 to-purple-600",
         },
         {
@@ -46,7 +57,8 @@ export default function Products() {
         {
           icon: Lock,
           title: "Treuhand & Administration",
-          description: "Treuhanddienstleistungen und administrative Unterstützung.",
+          description:
+            "Treuhanddienstleistungen und administrative Unterstützung.",
           color: "from-cyan-500 to-cyan-600",
         },
       ],
@@ -59,7 +71,8 @@ export default function Products() {
         {
           icon: Briefcase,
           title: "Business Consulting",
-          description: "Strategic optimization of business processes and corporate management.",
+          description:
+            "Strategic optimization of business processes and corporate management.",
           color: "from-blue-500 to-blue-600",
         },
         {
@@ -71,7 +84,8 @@ export default function Products() {
         {
           icon: Users,
           title: "HR Administration",
-          description: "Complete HR services from personnel administration to payroll.",
+          description:
+            "Complete HR services from personnel administration to payroll.",
           color: "from-purple-500 to-purple-600",
         },
         {
@@ -103,7 +117,12 @@ export default function Products() {
       <main className="flex flex-col">
         {/* Hero Section */}
         <section className="relative h-[45vh] min-h-[350px] w-full overflow-hidden flex items-center">
-          <img src={HERO_URL} alt={t.title} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "50% 12%" }} />
+          <img
+            src={HERO_URL}
+            alt={t.title}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: "50% 12%" }}
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
 
           <div className="container relative z-10 max-w-2xl">
@@ -111,9 +130,7 @@ export default function Products() {
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
                 {t.title}
               </h1>
-              <p className="text-xl text-muted-foreground">
-                {t.subtitle}
-              </p>
+              <p className="text-xl text-muted-foreground">{t.subtitle}</p>
             </div>
           </div>
         </section>
@@ -121,9 +138,7 @@ export default function Products() {
         {/* Services Grid */}
         <section className="container my-20">
           <div className="mb-12 max-w-2xl">
-            <p className="text-lg text-muted-foreground">
-              {t.description}
-            </p>
+            <p className="text-lg text-muted-foreground">{t.description}</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -135,7 +150,9 @@ export default function Products() {
                   className="group relative rounded-2xl overflow-hidden cursor-pointer"
                 >
                   {/* Background gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-10 group-hover:opacity-20 transition-opacity`} />
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-10 group-hover:opacity-20 transition-opacity`}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-br from-background to-background/50" />
 
                   {/* Border animation */}
@@ -143,7 +160,9 @@ export default function Products() {
 
                   {/* Content */}
                   <div className="relative z-10 p-8 flex flex-col h-full">
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                    <div
+                      className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
+                    >
                       <Icon className="w-7 h-7 text-white" />
                     </div>
 
