@@ -9,7 +9,7 @@ export default function AboutUs() {
   const content = {
     de: {
       title: "Über uns",
-      subtitle: "Vertrauensvolle Partnerschaft seit Jahren",
+      subtitle: "Vertrauensvolle Partnerschaft seit Jahrennnnnnnnn",
       description:
         "Numerix GmbH ist Ihr Spezialist für Unternehmens-, Finanz-, HR-, Steuer- und Versicherungsberatung sowie Treuhand- und Administrativdienstleistungen.",
       mission: "Unsere Mission",
