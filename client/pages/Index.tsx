@@ -10,15 +10,12 @@ export default function Index() {
       eyebrow: "Numerix GmbH",
       title: "Digital. Klar. Zuverlässig.",
       subtitle: "Sie fokussieren sich auf Ihr Business - wir auf Ihre Zahlen.",
+      subline: "Treuhand neu gedacht",
       body:
-        "Wir bringen Struktur in Finanzen, Lohn und Administration. Transparent, effizient und mit klaren Entscheidungen im Fokus.",
+        "Ihr Unternehmen verdient einen Partner, der nicht nur verwaltet, sondern mitdenkt. Numerix GmbH steht für digitale Prozesse, transparente Beratung und messbaren Mehrwert. Gemeinsam schaffen wir eine stabile finanzielle Basis für nachhaltiges Wachstum.",
       ctaPrimary: "Kontakt aufnehmen",
       ctaSecondary: "Leistungen ansehen",
-      highlights: [
-        "Digitale Zusammenarbeit mit klaren Prozessen.",
-        "Persönliche Betreuung mit festen Ansprechpartnern.",
-        "Transparente Auswertungen und verlässliche Fristen.",
-      ],
+      highlights: [],
       servicesTitle: "Leistungen, die den Alltag erleichtern",
       services: [
         {
@@ -65,6 +62,7 @@ export default function Index() {
       eyebrow: "Numerix GmbH",
       title: "Digital. Clear. Reliable.",
       subtitle: "You focus on your business - we focus on your numbers.",
+      subline: "Fiduciary reimagined",
       body:
         "We bring structure to finance, payroll and administration with transparency, efficiency and clear decisions.",
       ctaPrimary: "Get in touch",
@@ -137,7 +135,12 @@ export default function Index() {
               <p className="text-lg text-muted-foreground sm:text-xl">
                 {t.subtitle}
               </p>
-              <p className="max-w-2xl text-muted-foreground">{t.body}</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                {t.subline}
+              </p>
+              {t.body ? (
+                <p className="max-w-2xl text-muted-foreground">{t.body}</p>
+              ) : null}
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
                   <a href="/#/kontakt">{t.ctaPrimary}</a>
@@ -146,13 +149,15 @@ export default function Index() {
                   <a href="/#/dienstleistungen">{t.ctaSecondary}</a>
                 </Button>
               </div>
-              <div className="grid gap-3 pt-4 text-sm text-muted-foreground sm:grid-cols-3">
-                {t.highlights.map((item) => (
-                  <div key={item} className="rounded-lg border bg-background/70 p-3">
-                    {item}
-                  </div>
-                ))}
-              </div>
+              {t.highlights.length ? (
+                <div className="grid gap-3 pt-4 text-sm text-muted-foreground sm:grid-cols-3">
+                  {t.highlights.map((item) => (
+                    <div key={item} className="rounded-lg border bg-background/70 p-3">
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
             <div className="relative">
               <div className="absolute -inset-6 rounded-3xl bg-gradient-to-tr from-primary/15 via-transparent to-primary/25" />
