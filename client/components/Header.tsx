@@ -100,12 +100,8 @@ export default function Header() {
 
   const navItems = [
     { href: "/#/", labelDe: "Home", labelEn: "Home" },
+    {href: "/#/dienstleistungen",labelDe: "Dienstleistungen",labelEn: "Services",},
     { href: "/#/uber-uns", labelDe: "Über uns", labelEn: "About Us" },
-    {
-      href: "/#/dienstleistungen",
-      labelDe: "Dienstleistungen",
-      labelEn: "Services",
-    },
     { href: "/#/formulare", labelDe: "Formulare", labelEn: "Forms" },
     { href: "/#/kontakt", labelDe: "Kontakt", labelEn: "Contact" },
   ];
