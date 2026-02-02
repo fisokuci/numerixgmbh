@@ -10,11 +10,11 @@ export default function AboutUs() {
     de: {
       title: "Über uns",
       subtitle: "Vertrauensvolle Partnerschaft seit Jahren",
-      description:
-        "Numerix GmbH ist Ihr Spezialist für Unternehmens-, Finanz-, HR-, Steuer- und Versicherungsberatung sowie Treuhand- und Administrativdienstleistungen.",
-      mission: "Unsere Mission",
-      missionText:
-        "Wir schaffen nachhaltige Lösungen, die Ihr Geschäft optimieren und Ihr Vermögen schützen.",
+      description: "",
+      mission: "Digital & effizient",
+      missionText: "Einfachere Abläufe. Weniger Aufwand. Mehr Überblick.",
+      missionSubtext:
+        "Mit unseren digitalen Lösungen vermeiden Sie Papierberge, sparen wertvolle Zeit und behalten Ihre Finanzen jederzeit im Griff. Prozesse, die früher Stunden dauerten, erledigen wir heute effizient und sicher.",
       stats: [
         { number: "10+", label: "Jahre Erfahrung" },
         { number: "50+", label: "Zufriedene Kunden" },
@@ -137,9 +137,16 @@ export default function AboutUs() {
               <p className="text-lg text-muted-foreground leading-relaxed mb-8">
                 {t.missionText}
               </p>
-              <p className="text-base text-muted-foreground leading-relaxed">
-                {t.description}
-              </p>
+              {t.missionSubtext ? (
+                <p className="text-base text-muted-foreground leading-relaxed mb-8">
+                  {t.missionSubtext}
+                </p>
+              ) : null}
+              {t.description ? (
+                <p className="text-base text-muted-foreground leading-relaxed">
+                  {t.description}
+                </p>
+              ) : null}
             </div>
             <div className="relative h-96 rounded-2xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent" />
