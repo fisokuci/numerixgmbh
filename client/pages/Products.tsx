@@ -17,7 +17,7 @@ export default function Products() {
 
   const content = {
     de: {
-      title: "Dienstleistungen",
+      title: "Unsere Leistungen",
       subtitle: "Umfassende Lösungen für Ihr Geschäft",
       description:
         "Entdecken Sie unser breites Spektrum an professionellen Dienstleistungen.",
@@ -26,39 +26,42 @@ export default function Products() {
           icon: Briefcase,
           title: "Unternehmensberatung",
           description:
-            "Strategische Optimierung von Geschäftsprozessen und Unternehmensführung.",
+            "Strategische Begleitung für fundierte Entscheidungen – von der Gründung bis zur Skalierung.",
           color: "from-blue-500 to-blue-600",
         },
         {
           icon: TrendingUp,
-          title: "Finanzberatung",
-          description: "Professionelle Finanzplanung und Vermögensmanagement.",
+          title: "Rechnungswesen & Controlling",
+          description:
+            "Digitale Buchhaltung, klare Auswertungen und volle Kostenkontrolle in Echtzeit.",
           color: "from-green-500 to-green-600",
         },
         {
-          icon: Users,
-          title: "HR-Administration",
+          icon: Lock,
+          title: "Vorsorge- & Nachlassplanung",
           description:
-            "Vollständige HR-Dienstleistungen von Personaladministration bis Lohnabrechnung.",
+            "Weitsichtige Planung für Unternehmer, Familien und die nächste Generation – von finanzieller Vorsorge bis zur optimalen Nachlassregelung.",
           color: "from-purple-500 to-purple-600",
         },
         {
           icon: FileText,
           title: "Steuerberatung",
-          description: "Umfassende Steuerplanung und Steuererklärungen.",
+          description:
+            "Vorausschauend, gesetzeskonform und optimiert – damit Sie keine Chancen verschenken.",
           color: "from-orange-500 to-orange-600",
         },
         {
           icon: Shield,
-          title: "Versicherungsberatung",
-          description: "Bedarfsgerechte Versicherungslösungen und Vermittlung.",
+          title: "Versicherungen & Sozialversicherungen",
+          description:
+            "Massgeschneiderte Lösungen für KMU und Privatpersonen – Schutz, Absicherung und gesetzliche Vorsorge, damit Sie und Ihre Mitarbeitenden sicher planen können.",
           color: "from-red-500 to-red-600",
         },
         {
-          icon: Lock,
-          title: "Treuhand & Administration",
+          icon: Users,
+          title: "Treuhand & HR Administration",
           description:
-            "Treuhanddienstleistungen und administrative Unterstützung.",
+            "Kompetente Betreuung von Personaladministration, Lohnbuchhaltung und Treuhanddienstleistungen – effizient, zuverlässig und massgeschneidert für KMU.",
           color: "from-cyan-500 to-cyan-600",
         },
       ],
@@ -181,68 +184,6 @@ export default function Products() {
                 </div>
               );
             })}
-          </div>
-        </section>
-
-        {/* Why Choose Section */}
-        <section className="container mb-20">
-          <div className="relative rounded-3xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent" />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-
-            <div className="relative z-10 px-8 md:px-12 py-16 md:py-20">
-              <h2 className="text-4xl font-bold mb-4">
-                {lang === "de" ? "Warum Numerix?" : "Why Numerix?"}
-              </h2>
-              <p className="text-lg text-muted-foreground mb-12 max-w-2xl">
-                {lang === "de"
-                  ? "Wir kombinieren tiefe Fachkompetenz mit innovativen Lösungen."
-                  : "We combine deep expertise with innovative solutions."}
-              </p>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                {[
-                  {
-                    de: "Umfassende Expertise",
-                    en: "Comprehensive Expertise",
-                    descDe: "Jahrelange Erfahrung in verschiedenen Branchen.",
-                    descEn: "Years of experience across industries.",
-                  },
-                  {
-                    de: "Persönliche Betreuung",
-                    en: "Personal Service",
-                    descDe: "Dedizierte Ansprechpartner für Ihre Anfragen.",
-                    descEn: "Dedicated support for your needs.",
-                  },
-                  {
-                    de: "Innovative Lösungen",
-                    en: "Innovative Solutions",
-                    descDe: "Moderne Technologien und Best Practices.",
-                    descEn: "Modern technologies and best practices.",
-                  },
-                  {
-                    de: "Schweizer Standards",
-                    en: "Swiss Standards",
-                    descDe: "Höchste Standards für Qualität und Sicherheit.",
-                    descEn: "Highest standards for quality and security.",
-                  },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center flex-shrink-0">
-                      <span className="text-white font-bold">{idx + 1}</span>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg mb-2">
-                        {lang === "de" ? item.de : item.en}
-                      </h3>
-                      <p className="text-muted-foreground">
-                        {lang === "de" ? item.descDe : item.descEn}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </section>
 
