@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, Moon, Sun } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useTheme } from "next-themes";
 
 const HIGHLIGHT_ATTR = "data-search-highlight";
 
@@ -67,8 +68,10 @@ function highlightIn(root: HTMLElement, query: string) {
 
 export default function Header() {
   const { lang, setLang } = useLanguage();
+  const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isDark = theme === "dark";
 
   const onSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -165,6 +168,23 @@ export default function Header() {
               </form>
             </DialogContent>
           </Dialog>
+
+          <button
+            type="button"
+            role="switch"
+            aria-checked={isDark}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            onClick={() => setTheme(isDark ? "light" : "dark")}
+            className="relative inline-flex h-9 w-[68px] items-center rounded-full border border-border/70 bg-gradient-to-r from-slate-100 via-slate-50 to-slate-200 p-1 shadow-inner transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"
+          >
+            <span
+              className={`inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-amber-500 shadow-md ring-1 ring-black/5 transition-transform duration-300 dark:bg-slate-950 dark:text-cyan-300 ${
+                isDark ? "translate-x-[30px]" : "translate-x-0"
+              }`}
+            >
+              {isDark ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </span>
+          </button>
 
           <div className="mx-1 inline-flex overflow-hidden rounded-md border">
             <button

@@ -63,17 +63,17 @@ export default function AboutUs() {
             className="absolute inset-0 h-full w-full object-cover"
             style={{ objectPosition: "50% 12%" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent dark:from-background/95 dark:via-background/85 dark:to-background/40" />
 
           <div className="container relative z-10 max-w-2xl">
             <div className="space-y-4">
               <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium">
                 {lang === "de" ? "Seit 20+ Jahren" : "Since 20+ Years"}
               </span>
-              <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
+              <h1 className="text-5xl md:text-6xl font-bold tracking-tight dark:text-foreground">
                 {t.title}
               </h1>
-              <p className="text-xl text-muted-foreground max-w-xl">
+              <p className="text-xl text-muted-foreground dark:text-foreground/80 max-w-xl">
                 {t.subtitle}
               </p>
             </div>
@@ -86,12 +86,12 @@ export default function AboutUs() {
             {t.stats.map((stat, idx) => (
               <div
                 key={idx}
-                className="group rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-transparent p-6 md:p-8 hover:border-primary/50 transition-all"
+                className="group rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-transparent p-6 md:p-8 hover:border-primary/50 transition-all dark:border-border/60 dark:bg-background/85 dark:backdrop-blur-md dark:shadow-sm dark:hover:shadow-md"
               >
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent dark:text-sky-300 dark:bg-none">
                   {stat.number}
                 </div>
-                <p className="text-sm md:text-base text-muted-foreground mt-2">
+                <p className="text-sm md:text-base text-muted-foreground dark:text-foreground/75 mt-2">
                   {stat.label}
                 </p>
               </div>
