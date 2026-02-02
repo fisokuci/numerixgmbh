@@ -27,9 +27,9 @@ export default function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/dienstleistungen" element={<Products />} />
               <Route path="/uber-uns" element={<AboutUs />} />
               <Route path="/kontakt" element={<Contact />} />
-              <Route path="/dienstleistungen" element={<Products />} />
               <Route path="/formulare" element={<Forms />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
