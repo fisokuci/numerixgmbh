@@ -2,6 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const HERO_URL = "./logo_header.jpeg";
 const MISSION_IMAGE_URL = "/tablet_dashboard.jpg";
+const PARTNER_IMAGE_URL = "/beratung.png";
 
 export default function AboutUs() {
   const { lang } = useLanguage();
@@ -15,6 +16,12 @@ export default function AboutUs() {
       missionText: "Einfachere Abläufe. Weniger Aufwand. Mehr Überblick.",
       missionSubtext:
         "Mit unseren digitalen Lösungen vermeiden Sie Papierberge, sparen wertvolle Zeit und behalten Ihre Finanzen jederzeit im Griff. Prozesse, die früher Stunden dauerten, erledigen wir heute effizient und sicher.",
+      partnerTitle: "Ihr persönlicher Finanzpartner",
+      partnerText:
+        "Wir denken ganzheitlich: Buchhaltung, Steuern und Beratung aus einer Hand. Persönlich, kompetent und immer auf Augenhöhe. Unser Ziel ist es, Ihre Zahlen verständlich zu machen – und für Sie arbeiten zu lassen.",
+      numbersTitle: "Zahlen sind unsere Stärke.",
+      numbersText:
+        "Ob Start-up, KMU oder etabliertes Unternehmen: Wir unterstützen Sie mit Erfahrung, Präzision und einem klaren Blick für das Wesentliche. Gemeinsam steigern wir Effizienz, Rentabilität und Sicherheit.",
       stats: [
         { number: "10+", label: "Jahre Erfahrung" },
         { number: "50+", label: "Zufriedene Kunden" },
@@ -29,6 +36,12 @@ export default function AboutUs() {
       mission: "Our Mission",
       missionText:
         "We create sustainable solutions that optimize your business and protect your assets.",
+      partnerTitle: "Your personal finance partner",
+      partnerText:
+        "We take a holistic approach: accounting, taxes, and consulting from a single source. Personal, competent, and always on equal footing. Our goal is to make your numbers easy to understand—and let them work for you.",
+      numbersTitle: "Numbers are our strength.",
+      numbersText:
+        "Whether startup, SME, or established company: we support you with experience, precision, and a clear focus on what matters. Together we increase efficiency, profitability, and security.",
       stats: [
         { number: "20+", label: "Years Experience" },
         { number: "500+", label: "Satisfied Clients" },
@@ -116,6 +129,60 @@ export default function AboutUs() {
                 style={{ objectPosition: "50% 12%" }}
               />
             </div>
+          </div>
+        </section>
+
+        {/* Finance Partner Section */}
+        <section className="container mb-20">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative h-96 rounded-2xl overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent" />
+              <img
+                src={PARTNER_IMAGE_URL}
+                alt={t.partnerTitle}
+                className="w-full h-full object-cover"
+                style={{ objectPosition: "50% 50%" }}
+              />
+            </div>
+            <div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                {t.partnerTitle}
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                {t.partnerText}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Numbers Section */}
+        <section className="container mb-20">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              {t.numbersTitle}
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              {t.numbersText}
+            </p>
+          </div>
+        </section>
+
+        {/* CTA Box */}
+        <section className="container mb-20">
+          <div className="max-w-4xl mx-auto rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background p-8 md:p-10 text-center">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Bereit für den nächsten Schritt?
+            </h3>
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
+              Lernen Sie Numerix GmbH kennen und lassen Sie uns über Ihre Ziele
+              sprechen.
+            </p>
+            <a
+              href="/#/kontakt"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
+            >
+              Jetzt unverbindlich beraten lassen
+            </a>
           </div>
         </section>
 
