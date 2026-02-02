@@ -27,6 +27,10 @@ export default function AboutUs() {
         { number: "50+", label: "Zufriedene Kunden" },
         { number: "3", label: "Experten im Team" },
       ],
+      ctaTitle: "Bereit für den nächsten Schritt?",
+      ctaText:
+        "Lernen Sie Numerix GmbH kennen und lassen Sie uns über Ihre Ziele sprechen.",
+      ctaButton: "Jetzt unverbindlich beraten lassen",
     },
     en: {
       title: "About Us",
@@ -47,6 +51,10 @@ export default function AboutUs() {
         { number: "500+", label: "Satisfied Clients" },
         { number: "50+", label: "Team Experts" },
       ],
+      ctaTitle: "Ready for the next step?",
+      ctaText:
+        "Get to know Numerix GmbH and let’s talk about your goals.",
+      ctaButton: "Book a free consultation",
     },
   };
 
@@ -171,17 +179,16 @@ export default function AboutUs() {
         <section className="container mb-20">
           <div className="max-w-4xl mx-auto rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background p-8 md:p-10 text-center">
             <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              Bereit für den nächsten Schritt?
+              {t.ctaTitle}
             </h3>
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
-              Lernen Sie Numerix GmbH kennen und lassen Sie uns über Ihre Ziele
-              sprechen.
+              {t.ctaText}
             </p>
             <a
               href="/#/kontakt"
               className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
             >
-              Jetzt unverbindlich beraten lassen
+              {t.ctaButton}
             </a>
           </div>
         </section>
