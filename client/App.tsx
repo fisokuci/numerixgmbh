@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import Products from "./pages/Products";
 import Forms from "./pages/Forms";
 import Header from "@/components/Header";
+import ScrollToTop from "@/components/ScrollToTop";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ export default function App() {
         <Sonner />
         <HashRouter>
           <LanguageProvider>
+            <ScrollToTop />
             <Header />
             <Routes>
               <Route path="/" element={<Index />} />
