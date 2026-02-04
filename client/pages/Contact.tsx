@@ -90,7 +90,12 @@ export default function Contact() {
 
     try {
       setLoading(true);
-      const res = await fetch("/api/contact", {
+      const apiBaseUrl =
+        (import.meta.env.VITE_API_BASE_URL as string | undefined)
+          ?.replace(/\/$/, "") ?? "";
+      const apiUrl = apiBaseUrl ? `${apiBaseUrl}/api/contact` : "/api/contact";
+
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
