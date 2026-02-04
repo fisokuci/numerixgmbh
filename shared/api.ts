@@ -14,7 +14,8 @@ export interface DemoResponse {
 export interface ContactRequest {
   name: string;
   surname: string;
-  address: string;
+  email: string;
+  message?: string;
 }
 
 export interface ContactResponse {
