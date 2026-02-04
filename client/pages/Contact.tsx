@@ -12,10 +12,10 @@ const HERO_URL = "./logo_header.jpeg";
 
 export default function Contact() {
   const { lang } = useLanguage();
-  const [form, setForm] = useState<ContactRequest & { message?: string }>({
+  const [form, setForm] = useState<ContactRequest>({
     name: "",
     surname: "",
-    address: "",
+    email: "",
     message: "",
   });
   const [loading, setLoading] = useState(false);
@@ -55,13 +55,13 @@ export default function Contact() {
       phone: "Phone",
       phoneValue: "+41 44 XXX XX XX",
       email: "Email",
-      emailValue: "info@numerix.ch",
+      emailValue: "info@numerixgmbh.ch",
       hours: "Business Hours",
       hoursValue: "Mon-Fri: 08:00 - 18:00",
       formTitle: "Send us a message",
       name: "Last name",
       surname: "First name",
-      addressLabel: "Address",
+      addressLabel: "Email",
       message: "Message",
       messagePlaceholder: "Your message...",
       submit: "Submit",
@@ -81,7 +81,7 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!form.name || !form.surname || !form.address) {
+    if (!form.name || !form.surname || !form.email) {
       toast({
         title: lang === "de" ? "Fehlende Angaben" : "Missing information",
       });
@@ -96,7 +96,8 @@ export default function Contact() {
         body: JSON.stringify({
           name: form.name,
           surname: form.surname,
-          address: form.address,
+          email: form.email,
+          message: form.message,
         }),
       });
       const data = (await res.json()) as ContactResponse;
@@ -106,7 +107,7 @@ export default function Contact() {
         title: lang === "de" ? "Danke!" : "Thank you!",
         description: data.message,
       });
-      setForm({ name: "", surname: "", address: "", message: "" });
+      setForm({ name: "", surname: "", email: "", message: "" });
     } catch (err: any) {
       toast({
         title: lang === "de" ? "Fehler" : "Error",
@@ -124,7 +125,7 @@ export default function Contact() {
       icon: Mail,
       label: t.email,
       value: t.emailValue,
-      href: "mailto:info@numerix.ch",
+      href: "mailto:info@numerixgmbh.ch",
     },
     { icon: Clock, label: t.hours, value: t.hoursValue },
   ];
@@ -236,13 +237,14 @@ export default function Contact() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="address" className="text-sm font-medium">
+                    <Label htmlFor="email" className="text-sm font-medium">
                       {t.addressLabel}
                     </Label>
                     <Input
-                      id="address"
-                      name="address"
-                      value={form.address}
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={form.email}
                       onChange={handleChange}
                       className="rounded-xl border-border/50 bg-background/50 focus:border-primary transition-colors"
                       required
