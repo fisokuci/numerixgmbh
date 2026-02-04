@@ -100,8 +100,25 @@ export default function Contact() {
           message: form.message,
         }),
       });
-      const data = (await res.json()) as ContactResponse;
-      if (!res.ok || !data.ok) throw new Error(data.message);
+      const contentType = res.headers.get("content-type") ?? "";
+      let data: ContactResponse | null = null;
+      if (contentType.includes("application/json")) {
+        data = (await res.json()) as ContactResponse;
+      } else {
+        const fallbackMessage =
+          lang === "de"
+            ? "Server hat keine gültige Antwort geliefert."
+            : "Server returned an invalid response.";
+        throw new Error(fallbackMessage);
+      }
+      if (!res.ok || !data.ok) {
+        throw new Error(
+          data.message ||
+            (lang === "de"
+              ? "Nachricht konnte nicht gesendet werden."
+              : "Message could not be sent."),
+        );
+      }
 
       toast({
         title: lang === "de" ? "Danke!" : "Thank you!",

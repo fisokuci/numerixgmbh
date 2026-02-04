@@ -81,6 +81,50 @@ export const handleContact: RequestHandler = async (req, res) => {
       } satisfies ContactResponse);
     }
 
+    const autoReplyHtml = `
+      <p>Hallo ${safeName},</p>
+      <p>vielen Dank für Ihre Nachricht. Wir haben Ihre Anfrage erhalten und melden uns so schnell wie möglich.</p>
+      <p><strong>Ihre Nachricht:</strong><br />${htmlMessage}</p>
+      <p>Freundliche Grüsse<br />Numerix GmbH</p>
+      <hr />
+      <p>Hello ${safeName},</p>
+      <p>Thank you for your message. We have received your request and will get back to you as soon as possible.</p>
+      <p><strong>Your message:</strong><br />${htmlMessage}</p>
+      <p>Best regards<br />Numerix GmbH</p>
+    `;
+    const autoReplyText = [
+      `Hallo ${payload.name},`,
+      "vielen Dank für Ihre Nachricht. Wir haben Ihre Anfrage erhalten und melden uns so schnell wie möglich.",
+      "",
+      "Ihre Nachricht:",
+      payload.message?.trim() ? payload.message : "Keine Nachricht angegeben.",
+      "",
+      "Freundliche Grüsse",
+      "Numerix GmbH",
+      "",
+      "Hello",
+      "Thank you for your message. We have received your request and will get back to you as soon as possible.",
+      "",
+      "Your message:",
+      payload.message?.trim() ? payload.message : "No message provided.",
+      "",
+      "Best regards",
+      "Numerix GmbH",
+    ].join("\n");
+
+    const { error: autoError } = await resend.emails.send({
+      from: RESEND_FROM_EMAIL,
+      to: [payload.email],
+      subject: "Wir haben Ihre Nachricht erhalten | We received your message",
+      html: autoReplyHtml,
+      text: autoReplyText,
+      replyTo: CONTACT_TO_EMAIL,
+    });
+
+    if (autoError) {
+      console.error("Resend auto-reply error:", autoError);
+    }
+
     return res.status(200).json({
       ok: true,
       message: "Message sent successfully.",
