@@ -40,6 +40,7 @@ export default function AboutUs() {
       mission: "Our Mission",
       missionText:
         "We create sustainable solutions that optimize your business and protect your assets.",
+      missionSubtext: "",
       partnerTitle: "Your personal finance partner",
       partnerText:
         "We take a holistic approach: accounting, taxes, and consulting from a single source. Personal, competent, and always on equal footing. Our goal is to make your numbers easy to understand—and let them work for you.",

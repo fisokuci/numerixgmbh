@@ -22,3 +22,30 @@ export interface ContactResponse {
   ok: boolean;
   message: string;
 }
+
+export interface AdminLoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface AdminUmamiConfig {
+  configured: boolean;
+  websiteId: string;
+  scriptUrl: string;
+  dashboardUrl?: string;
+  shareUrl?: string;
+}
+
+export interface AdminLoginResponse {
+  ok: boolean;
+  message: string;
+  token?: string;
+  expiresAt?: string;
+  umami?: AdminUmamiConfig;
+}
+
+export interface AdminSessionResponse {
+  authenticated: boolean;
+  expiresAt?: string;
+  umami?: AdminUmamiConfig;
+}

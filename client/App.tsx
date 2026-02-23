@@ -14,6 +14,8 @@ import Forms from "./pages/Forms";
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import Admin from "./pages/Admin";
+import UmamiAnalytics from "@/components/UmamiAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <UmamiAnalytics />
         <Toaster />
         <Sonner />
         <HashRouter>
@@ -33,6 +36,7 @@ export default function App() {
               <Route path="/uber-uns" element={<AboutUs />} />
               <Route path="/kontakt" element={<Contact />} />
               <Route path="/formulare" element={<Forms />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </LanguageProvider>

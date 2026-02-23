@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, Menu, Moon, Sun } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -66,12 +66,38 @@ function highlightIn(root: HTMLElement, query: string) {
   return count;
 }
 
+function shouldIgnoreShortcutTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+  if (target.isContentEditable) return true;
+
+  const tagName = target.tagName;
+  return tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT";
+}
+
 export default function Header() {
   const { lang, setLang } = useLanguage();
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const isDark = theme === "dark";
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const isAdminShortcut =
+        (event.metaKey || event.ctrlKey) &&
+        event.shiftKey &&
+        event.key.toLowerCase() === "a";
+
+      if (!isAdminShortcut) return;
+      if (shouldIgnoreShortcutTarget(event.target)) return;
+
+      event.preventDefault();
+      window.location.hash = "#/admin";
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const onSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();

@@ -3,6 +3,11 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleContact } from "./routes/contact";
+import {
+  handleAdminLogin,
+  handleAdminLogout,
+  handleAdminSession,
+} from "./routes/admin";
 
 export function createServer() {
   const app = express();
@@ -20,15 +25,25 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
   app.post("/api/contact", handleContact);
+  app.post("/api/admin/login", handleAdminLogin);
+  app.get("/api/admin/session", handleAdminSession);
+  app.post("/api/admin/logout", handleAdminLogout);
 
   app.use("/api", (_req, res) => {
     res.status(404).json({ ok: false, message: "Not found" });
   });
 
-  app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    console.error("Unhandled error:", err);
-    res.status(500).json({ ok: false, message: "Internal server error" });
-  });
+  app.use(
+    (
+      err: unknown,
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction,
+    ) => {
+      console.error("Unhandled error:", err);
+      res.status(500).json({ ok: false, message: "Internal server error" });
+    },
+  );
 
   return app;
 }
