@@ -16,27 +16,7 @@ export default function Index() {
       ctaPrimary: "Kontakt aufnehmen",
       ctaSecondary: "Leistungen ansehen",
       highlights: [],
-      servicesTitle: "Leistungen, die den Alltag erleichtern",
-      services: [
-        {
-          title: "Treuhand & Finanzbuchhaltung",
-          description:
-            "Saubere Abschlüsse, laufende Buchhaltung und fundierte Beratung.",
-        },
-        {
-          title: "Lohn & HR-Administration",
-          description:
-            "Payroll, Verträge und Mutationen effizient abgewickelt.",
-        },
-        {
-          title: "Steuern & Reporting",
-          description:
-            "Klare Zahlen, verständliche Reports und vorausschauende Planung.",
-        },
-      ],
       processTitle: "So arbeiten wir",
-      processIntro:
-        "Wir schaffen eine stabile Basis und halten die Umsetzung transparent.",
       process: [
         {
           title: "Analyse",
@@ -72,27 +52,7 @@ export default function Index() {
         "Personal guidance with dedicated contacts.",
         "Transparent reporting and reliable timelines.",
       ],
-      servicesTitle: "Services that simplify your day",
-      services: [
-        {
-          title: "Fiduciary & Financial Accounting",
-          description:
-            "Accurate bookkeeping, clean closings and reliable advice.",
-        },
-        {
-          title: "Payroll & HR Administration",
-          description:
-            "Payroll, contracts and changes handled efficiently.",
-        },
-        {
-          title: "Tax & Reporting",
-          description:
-            "Clear numbers, understandable reports and forward planning.",
-        },
-      ],
       processTitle: "How we work",
-      processIntro:
-        "We build a stable foundation and keep execution transparent.",
       process: [
         {
           title: "Analysis",
@@ -173,39 +133,12 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="container py-16">
-          <div className="mb-10 max-w-2xl space-y-3">
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              {t.servicesTitle}
-            </h2>
-            <p className="text-muted-foreground">
-              {lang === "de"
-                ? "Strukturiert, digital und immer nachvollziehbar."
-                : "Structured, digital and always transparent."}
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {t.services.map((service) => (
-              <div
-                key={service.title}
-                className="rounded-2xl border bg-background p-6 shadow-sm"
-              >
-                <h3 className="text-lg font-semibold">{service.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {service.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section className="container pb-16">
           <div className="rounded-3xl border bg-muted/30 p-8 md:p-12">
             <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
                 {t.processTitle}
               </h2>
-              <p className="max-w-lg text-muted-foreground">{t.processIntro}</p>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
               {t.process.map((step, index) => (
