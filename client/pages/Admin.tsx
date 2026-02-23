@@ -41,6 +41,7 @@ export default function Admin() {
   const [password, setPassword] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
   const [umami, setUmami] = useState<AdminUmamiConfig | undefined>(undefined);
+  const [iframeBlocked, setIframeBlocked] = useState(false);
 
   useEffect(() => {
     const token = getAdminToken();
@@ -292,10 +293,27 @@ export default function Admin() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="mb-4">
+                    <Button asChild variant="secondary">
+                      <a href={umami?.shareUrl} target="_blank" rel="noreferrer">
+                        {lang === "de"
+                          ? "Share URL in neuem Tab öffnen"
+                          : "Open share URL in new tab"}
+                      </a>
+                    </Button>
+                  </div>
+                  {iframeBlocked ? (
+                    <p className="mb-4 text-sm text-muted-foreground">
+                      {lang === "de"
+                        ? "Einige Browser-Erweiterungen oder Sicherheitseinstellungen blockieren die Einbettung. Bitte öffne die Share URL im neuen Tab."
+                        : "Some browser extensions or security settings block embedding. Please open the share URL in a new tab."}
+                    </p>
+                  ) : null}
                   <iframe
                     title="Umami analytics"
                     src={umami?.shareUrl}
                     className="w-full h-[760px] rounded-md border"
+                    onError={() => setIframeBlocked(true)}
                   />
                 </CardContent>
               </Card>

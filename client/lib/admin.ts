@@ -6,10 +6,25 @@ import type {
 
 const ADMIN_TOKEN_KEY = "numerix_admin_token";
 
-const getApiBaseUrl = () =>
-  ((import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "")
+const getApiBaseUrl = () => {
+  const configuredBaseUrl = (
+    (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? ""
+  )
     .replace(/\/$/, "")
     .trim();
+
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    const isLocalDevHost =
+      host === "localhost" || host === "127.0.0.1" || host === "::1";
+
+    // In local development we always use same-origin /api to avoid accidental
+    // remote API calls from stale VITE_API_BASE_URL values.
+    if (isLocalDevHost) return "";
+  }
+
+  return configuredBaseUrl;
+};
 
 const toApiUrl = (path: string) => {
   const baseUrl = getApiBaseUrl();
