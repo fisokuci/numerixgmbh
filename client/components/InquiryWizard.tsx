@@ -19,8 +19,8 @@ type ServiceOption = {
     en: string;
   };
   description: {
-    de: string;
-    en: string;
+    de: string | string[];
+    en: string | string[];
   };
   icon: typeof Landmark;
 };
@@ -30,7 +30,12 @@ const privateServices: ServiceOption[] = [
     value: "steuern",
     label: { de: "Steuern", en: "Taxes" },
     description: {
-      de: "Steuererklärung, Optimierung und Fristen im Griff.",
+      de: [
+        "Steuererklärung",
+        "Steuerplanung / Optimierung",
+        "Prüfung Steuerveranlagung & Einsprachen",
+        "Beratung bei Spezialfällen",
+      ],
       en: "Tax returns, optimisation and deadline support.",
     },
     icon: Landmark,
@@ -39,7 +44,12 @@ const privateServices: ServiceOption[] = [
     value: "versicherungen",
     label: { de: "Versicherungen", en: "Insurance" },
     description: {
-      de: "Absicherung prüfen, ordnen und passend aufsetzen.",
+      de: [
+        "Personenversicherungen",
+        "Sachversicherungen",
+        "Policenvergleich",
+        "Schadenfall-Unterstützung",
+      ],
       en: "Review, structure and optimise your insurance setup.",
     },
     icon: Shield,
@@ -48,16 +58,26 @@ const privateServices: ServiceOption[] = [
     value: "vorsorge",
     label: { de: "Vorsorge", en: "Retirement planning" },
     description: {
-      de: "Pensions- und Vorsorgethemen verständlich geplant.",
+      de: [
+        "Säule 3a",
+        "Pensionsplanung",
+        "BVG-Analyse",
+        "Vermögensplanung",
+      ],
       en: "Clear guidance for pension and long-term planning.",
     },
     icon: Wallet,
   },
   {
     value: "allgemeine-administration",
-    label: { de: "Allgemeine Administration", en: "General administration" },
+    label: { de: "Allg. Administration", en: "General administration" },
     description: {
-      de: "Unterstützung bei Formularen, Korrespondenz und Abläufen.",
+      de: [
+        "Korrespondenz mit Ämtern",
+        "Budget- und Finanzübersicht",
+        "Zahlungsverkehr & Rechnungen",
+        "Nachlass- und Dokumentenorganisation",
+      ],
       en: "Support with forms, correspondence and admin tasks.",
     },
     icon: FileText,
@@ -69,7 +89,12 @@ const businessServices: ServiceOption[] = [
     value: "treuhand",
     label: { de: "Treuhand", en: "Fiduciary services" },
     description: {
-      de: "Finanzen, Abschlüsse und laufende Betreuung aus einer Hand.",
+      de: [
+        "Buchhaltung führen",
+        "Jahresabschluss erstellen",
+        "Lohnbuchhaltung",
+        "Firmengründung",
+      ],
       en: "Accounting, closings and ongoing fiduciary support.",
     },
     icon: BriefcaseBusiness,
@@ -78,7 +103,12 @@ const businessServices: ServiceOption[] = [
     value: "steuern-unternehmen",
     label: { de: "Steuern Unternehmen", en: "Corporate taxes" },
     description: {
-      de: "Steuerplanung und Unternehmenssteuern sauber umgesetzt.",
+      de: [
+        "Steuererklärung",
+        "Steueroptimierung",
+        "MWST",
+        "Steuervertretung ggü. Behörden",
+      ],
       en: "Corporate tax planning and compliant execution.",
     },
     icon: Landmark,
@@ -87,16 +117,25 @@ const businessServices: ServiceOption[] = [
     value: "versicherungen",
     label: { de: "Versicherungen", en: "Insurance" },
     description: {
-      de: "Passende Versicherungsstruktur für Ihr Unternehmen.",
+      de: [
+        "Personenversicherungen",
+        "Betriebsversicherungen",
+        "Versicherungsanalyse Betrieb",
+        "Schadenmanagement",
+      ],
       en: "Insurance structures aligned to your business.",
     },
     icon: Shield,
   },
   {
     value: "allgemeine-administration",
-    label: { de: "Allgemeine Administration", en: "General administration" },
+    label: { de: "Allg. Administration", en: "General administration" },
     description: {
-      de: "Entlastung bei Backoffice, Dokumenten und Prozessen.",
+      de: [
+        "Rechnungswesen Organisation",
+        "Mahn- und Inkassowesen",
+        "Vertrags- und Dokumentenmanagement",
+      ],
       en: "Relief for back office, documents and processes.",
     },
     icon: FileText,
@@ -455,6 +494,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
                     {serviceOptions.map((option) => {
                       const Icon = option.icon;
                       const isSelected = services.includes(option.value);
+                      const description = option.description[lang as "de" | "en"];
 
                       return (
                         <button
@@ -478,16 +518,29 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
                           >
                             {isSelected ? <Check className="h-4 w-4" /> : null}
                           </div>
-                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-teal-300 ring-1 ring-white/10">
-                            <Icon className="h-5 w-5" />
-                          </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-lg font-semibold text-white">
-                              {option.label[lang as "de" | "en"]}
-                            </p>
-                            <p className="mt-1 text-sm leading-5 text-slate-300">
-                              {option.description[lang as "de" | "en"]}
-                            </p>
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-teal-300 ring-1 ring-white/10">
+                                <Icon className="h-5 w-5" />
+                              </div>
+                              <p className="text-lg font-semibold text-white">
+                                {option.label[lang as "de" | "en"]}
+                              </p>
+                            </div>
+                            {Array.isArray(description) ? (
+                              <ul className="mt-3 space-y-1 text-sm leading-5 text-slate-300">
+                                {description.map((item) => (
+                                  <li key={item} className="flex gap-2">
+                                    <span className="mt-[0.45rem] h-1 w-1 rounded-full bg-slate-500" />
+                                    <span>{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p className="mt-3 text-sm leading-5 text-slate-300">
+                                {description}
+                              </p>
+                            )}
                           </div>
                         </button>
                       );
