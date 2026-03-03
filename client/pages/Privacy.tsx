@@ -38,7 +38,7 @@ export default function Privacy() {
       cards: [
         {
           title: "Verantwortlich",
-          body: "Numerix GmbH, Pratteln, Schweiz, info@numerixgmbh.ch, +41 79 833 37 33",
+          body: "Numerix GmbH, Bahnhofstrasse 16, 4133 Pratteln, Schweiz, info@numerixgmbh.ch, +41 79 833 37 33",
           icon: ShieldCheck,
         },
         {
@@ -56,8 +56,8 @@ export default function Privacy() {
         {
           title: "1. Verantwortliche Stelle",
           body: [
-            "Verantwortlich für die Bearbeitung personenbezogener Daten auf dieser Website ist Numerix GmbH in Pratteln, Schweiz.",
-            "Für Datenschutzanliegen können Sie uns unter info@numerixgmbh.ch kontaktieren. Wenn Sie uns die vollständige Geschäftsadresse nennen möchten, sollte diese an dieser Stelle ergänzt werden.",
+            "Verantwortlich für die Bearbeitung personenbezogener Daten auf dieser Website ist Numerix GmbH, Bahnhofstrasse 16, 4133 Pratteln, Schweiz.",
+            "Für Datenschutzanliegen können Sie uns unter info@numerixgmbh.ch oder telefonisch unter +41 79 833 37 33 kontaktieren.",
           ],
         },
         {
@@ -135,7 +135,7 @@ export default function Privacy() {
       cards: [
         {
           title: "Controller",
-          body: "Numerix GmbH, Pratteln, Switzerland, info@numerixgmbh.ch, +41 79 833 37 33",
+          body: "Numerix GmbH, Bahnhofstrasse 16, 4133 Pratteln, Switzerland, info@numerixgmbh.ch, +41 79 833 37 33",
           icon: ShieldCheck,
         },
         {
@@ -153,8 +153,8 @@ export default function Privacy() {
         {
           title: "1. Controller",
           body: [
-            "The controller for processing personal data on this website is Numerix GmbH in Pratteln, Switzerland.",
-            "For privacy-related requests you can contact us at info@numerixgmbh.ch. If you want this notice to be fully complete, the full business address should be added here.",
+            "The controller for processing personal data on this website is Numerix GmbH, Bahnhofstrasse 16, 4133 Pratteln, Switzerland.",
+            "For privacy-related requests you can contact us at info@numerixgmbh.ch or by phone at +41 79 833 37 33.",
           ],
         },
         {

@@ -13,6 +13,7 @@ export default function SiteFooter() {
       links: [
         { href: "/#/", label: "Startseite" },
         { href: "/#/kontakt", label: "Kontakt" },
+        { href: "/#/impressum", label: "Impressum" },
         { href: "/#/datenschutz", label: "Datenschutz" },
         { href: "/#/formulare", label: "Formulare" },
       ],
@@ -26,6 +27,7 @@ export default function SiteFooter() {
       links: [
         { href: "/#/", label: "Home" },
         { href: "/#/kontakt", label: "Contact" },
+        { href: "/#/imprint", label: "Imprint" },
         { href: "/#/privacy", label: "Privacy" },
         { href: "/#/formulare", label: "Forms" },
       ],

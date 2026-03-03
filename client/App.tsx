@@ -19,6 +19,7 @@ import UmamiAnalytics from "@/components/UmamiAnalytics";
 import Privacy from "./pages/Privacy";
 import SiteFooter from "@/components/SiteFooter";
 import CookiebotBanner from "@/components/CookiebotBanner";
+import Imprint from "./pages/Imprint";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,8 @@ export default function App() {
               <Route path="/uber-uns" element={<AboutUs />} />
               <Route path="/kontakt" element={<Contact />} />
               <Route path="/formulare" element={<Forms />} />
+              <Route path="/impressum" element={<Imprint />} />
+              <Route path="/imprint" element={<Imprint />} />
               <Route path="/datenschutz" element={<Privacy />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/admin" element={<Admin />} />
