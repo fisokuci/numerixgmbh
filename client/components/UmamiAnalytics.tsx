@@ -1,5 +1,8 @@
 import { useEffect } from "react";
-import { isCookiebotActive } from "@/lib/cookiebot";
+import {
+  hasCookiebotStatisticsConsent,
+  isCookiebotActive,
+} from "@/lib/cookiebot";
 
 const SCRIPT_ID = "umami-analytics-script";
 const DEFAULT_SCRIPT_URL = "https://cloud.umami.is/script.js";
@@ -48,7 +51,7 @@ export default function UmamiAnalytics() {
     }
 
     const maybeLoadUmami = () => {
-      if (window.Cookiebot?.consent.statistics) {
+      if (hasCookiebotStatisticsConsent()) {
         loadUmami();
       }
     };

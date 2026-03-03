@@ -35,3 +35,9 @@ export function getCookiebotConfig() {
 export function isCookiebotActive() {
   return getCookiebotConfig().active;
 }
+
+export function hasCookiebotStatisticsConsent() {
+  if (typeof window === "undefined") return false;
+
+  return window.Cookiebot?.consent?.statistics === true;
+}

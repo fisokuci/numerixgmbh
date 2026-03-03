@@ -19,7 +19,7 @@ interface CookiebotConsentState {
 }
 
 interface CookiebotInstance {
-  consent: CookiebotConsentState;
+  consent?: CookiebotConsentState;
   renew: () => void;
   runScripts: () => void;
 }
