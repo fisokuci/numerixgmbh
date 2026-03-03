@@ -415,7 +415,7 @@ export default function Products() {
     <div className="relative min-h-screen bg-background overflow-hidden">
       <main className="flex flex-col">
         {/* Hero Section */}
-        <section className="relative h-[45vh] min-h-[350px] w-full overflow-hidden flex items-center">
+        <section className="relative flex h-[40vh] min-h-[300px] w-full items-center overflow-hidden md:min-h-[320px]">
           <img
             src={HERO_URL}
             alt={t.title}
@@ -426,21 +426,21 @@ export default function Products() {
 
           <div className="container relative z-10 max-w-2xl">
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
+              <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-[3.4rem]">
                 {t.title}
               </h1>
-              <p className="text-xl text-muted-foreground">{t.subtitle}</p>
+              <p className="text-lg text-muted-foreground md:text-xl">{t.subtitle}</p>
             </div>
           </div>
         </section>
 
         {/* Services Grid */}
-        <section className="container my-20">
-          <div className="mb-12 max-w-2xl">
+        <section className="container my-14 md:my-16">
+          <div className="mb-8 max-w-2xl md:mb-10">
             <p className="text-lg text-muted-foreground">{t.description}</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {t.services.map((service) => {
               const Icon = service.icon;
               const isActive = service.id === selectedServiceId;
@@ -449,7 +449,7 @@ export default function Products() {
                   key={service.id}
                   type="button"
                   onClick={() => handleServiceSelect(service.id)}
-                  className="group relative overflow-hidden rounded-2xl text-left cursor-pointer"
+                  className="group relative overflow-hidden rounded-[1.6rem] text-left cursor-pointer"
                 >
                   {/* Background gradient */}
                   <div
@@ -457,40 +457,43 @@ export default function Products() {
                       isActive ? "opacity-20" : "opacity-10 group-hover:opacity-20"
                     }`}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-br from-background to-background/50" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/95 to-slate-100/90 dark:from-background dark:via-background dark:to-background/60" />
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent dark:via-white/10" />
 
                   {/* Border animation */}
                   <div
-                    className={`absolute inset-0 rounded-2xl border transition-colors ${
+                    className={`absolute inset-0 rounded-[1.6rem] border transition-colors ${
                       isActive
-                        ? "border-primary/70"
-                        : "border-border/50 group-hover:border-primary/50"
+                        ? "border-primary/60 shadow-[0_18px_50px_-35px_rgba(37,99,235,0.35)] dark:shadow-none"
+                        : "border-slate-200/80 shadow-[0_18px_45px_-35px_rgba(15,23,42,0.28)] group-hover:border-primary/40 group-hover:shadow-[0_22px_50px_-35px_rgba(15,23,42,0.3)] dark:border-border/50 dark:shadow-none"
                     }`}
                   />
 
                   {/* Content */}
-                  <div className="relative z-10 p-8 flex flex-col h-full">
+                  <div className="relative z-10 flex h-full flex-col p-6 md:p-7">
                     <div
-                      className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-6 transition-transform ${
+                      className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${service.color} transition-transform ${
                         isActive ? "scale-110" : "group-hover:scale-110"
                       }`}
                     >
-                      <Icon className="w-7 h-7 text-white" />
+                      <Icon className="h-6 w-6 text-white" />
                     </div>
 
                     <h3
-                      className={`text-xl font-bold mb-3 transition-colors ${
-                        isActive ? "text-primary" : "group-hover:text-primary"
+                      className={`mb-3 text-lg font-bold leading-snug transition-colors md:text-[1.35rem] ${
+                        isActive
+                          ? "text-primary"
+                          : "text-slate-900 group-hover:text-primary dark:text-foreground"
                       }`}
                     >
                       {service.title}
                     </h3>
-                    <p className="text-muted-foreground flex-1 mb-6">
+                    <p className="mb-5 flex-1 text-sm leading-7 text-slate-600 dark:text-muted-foreground md:text-[15px]">
                       {service.description}
                     </p>
 
                     <span
-                      className={`inline-flex items-center gap-2 text-primary font-semibold text-sm transition-all ${
+                      className={`inline-flex items-center gap-2 text-sm font-semibold text-primary transition-all ${
                         isActive
                           ? "opacity-100 gap-3"
                           : "opacity-0 group-hover:opacity-100 group-hover:gap-3"
@@ -507,35 +510,67 @@ export default function Products() {
         </section>
 
         {selectedService ? (
-          <section ref={detailsRef} className="container mb-20 scroll-mt-24">
-            <div className="rounded-3xl border bg-muted/30 p-8 md:p-10">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                {t.detailEyebrow}
-              </p>
-              <div className="mt-4 flex flex-col gap-8 lg:grid lg:grid-cols-[1.1fr_1.3fr]">
-                <div>
-                  <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                    {selectedService.detailTitle}
-                  </h2>
-                  <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-                    {selectedService.detailText}
-                  </p>
-                  <Button asChild className="mt-6 rounded-xl">
-                    <a href="/#/kontakt">
-                      {t.detailCta}
-                    </a>
-                  </Button>
-                </div>
+          <section ref={detailsRef} className="container mb-14 scroll-mt-24 md:mb-16">
+            <div className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-gradient-to-br from-slate-50 via-white to-slate-100 p-8 shadow-[0_20px_80px_-40px_rgba(15,23,42,0.25)] dark:from-muted/40 dark:via-background dark:to-muted/20 dark:shadow-none md:p-10">
+              <div
+                className={`absolute left-0 top-0 h-1.5 w-full bg-gradient-to-r ${selectedService.color} opacity-80`}
+              />
+              <div className="absolute -left-16 top-12 h-40 w-40 rounded-full bg-primary/10 blur-3xl dark:bg-primary/15" />
+              <div
+                className={`absolute -right-10 bottom-0 h-44 w-44 rounded-full bg-gradient-to-br ${selectedService.color} opacity-10 blur-3xl`}
+              />
 
-                <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                  {selectedService.detailPoints.map((point) => (
-                    <div key={point.title} className="rounded-2xl bg-background p-6">
-                      <h3 className="text-lg font-semibold">{point.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                        {point.text}
-                      </p>
+              <div className="relative">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-muted-foreground">
+                  {t.detailEyebrow}
+                </p>
+                <div className="mt-5 flex flex-col gap-8 lg:grid lg:grid-cols-[1.05fr_1.35fr]">
+                  <div className="rounded-[1.75rem] border border-white/70 bg-white/80 p-7 shadow-[0_18px_50px_-35px_rgba(15,23,42,0.35)] backdrop-blur dark:border-border/60 dark:bg-background/60 dark:shadow-none md:p-8">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${selectedService.color} shadow-lg shadow-primary/15`}
+                      >
+                        <selectedService.icon className="h-7 w-7 text-white" />
+                      </div>
+                      <div className="h-px flex-1 bg-gradient-to-r from-border via-border/60 to-transparent" />
                     </div>
-                  ))}
+
+                    <h2 className="mt-6 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground md:text-4xl">
+                      {selectedService.detailTitle}
+                    </h2>
+                    <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600 dark:text-muted-foreground">
+                      {selectedService.detailText}
+                    </p>
+                    <Button asChild className="mt-6 rounded-xl shadow-md shadow-primary/20">
+                      <a href="/#/kontakt">
+                        {t.detailCta}
+                      </a>
+                    </Button>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                    {selectedService.detailPoints.map((point, index) => (
+                      <div
+                        key={point.title}
+                        className="group rounded-[1.6rem] border border-slate-200/80 bg-white/85 p-6 shadow-[0_16px_40px_-32px_rgba(15,23,42,0.35)] backdrop-blur transition-transform duration-300 hover:-translate-y-1 dark:border-border/60 dark:bg-background/80 dark:shadow-none"
+                      >
+                        <div className="mb-5 flex items-center gap-3">
+                          <div
+                            className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${selectedService.color} text-sm font-semibold text-white`}
+                          >
+                            0{index + 1}
+                          </div>
+                          <div className="h-px flex-1 bg-gradient-to-r from-border/80 to-transparent" />
+                        </div>
+                        <h3 className="text-lg font-semibold leading-8 text-slate-900 dark:text-foreground">
+                          {point.title}
+                        </h3>
+                        <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-muted-foreground">
+                          {point.text}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -543,8 +578,8 @@ export default function Products() {
         ) : null}
 
         {/* CTA Section */}
-        <section className="container mb-20">
-          <div className="text-center py-12">
+        <section className="container mb-14 md:mb-16">
+          <div className="py-8 text-center md:py-10">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               {lang === "de" ? "Bereit zu beginnen?" : "Ready to begin?"}
             </h2>
