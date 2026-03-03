@@ -16,7 +16,6 @@ export default function Index() {
         "Ihr Unternehmen verdient einen Partner, der nicht nur verwaltet, sondern mitdenkt. Numerix GmbH steht für digitale Prozesse, transparente Beratung und messbaren Mehrwert. Gemeinsam schaffen wir eine stabile finanzielle Basis für nachhaltiges Wachstum.",
       ctaPrimary: "Anfrage starten",
       ctaSecondary: "Leistungen ansehen",
-      highlights: [],
       processTitle: "So arbeiten wir",
       process: [
         {
@@ -45,35 +44,30 @@ export default function Index() {
       subtitle: "You focus on your business - we focus on your numbers.",
       subline: "Fiduciary reimagined",
       body:
-        "We bring structure to finance, payroll and administration with transparency, efficiency and clear decisions.",
-      ctaPrimary: "Get Started",
+        "Your business deserves a partner who does more than just administer and thinks ahead with you. Numerix GmbH stands for digital processes, transparent advice and measurable added value. Together, we create a stable financial foundation for sustainable growth.",
+      ctaPrimary: "Start inquiry",
       ctaSecondary: "View services",
-      highlights: [
-        "Digital collaboration with clear processes.",
-        "Personal guidance with dedicated contacts.",
-        "Transparent reporting and reliable timelines.",
-      ],
       processTitle: "How we work",
       process: [
         {
           title: "Analysis",
           description:
-            "We understand your workflows and uncover optimization potential.",
+            "We understand your workflows and identify optimisation potential.",
         },
         {
-          title: "Execution",
+          title: "Implementation",
           description:
             "Digital processes that run reliably and transparently.",
         },
         {
-          title: "Guidance",
+          title: "Support",
           description:
-            "Regular reviews and clear communication at eye level.",
+            "Regular reviews and clear communication on equal footing.",
         },
       ],
-      ctaTitle: "Ready to get started?",
+      ctaTitle: "Ready for the first step?",
       ctaText:
-        "Use the guided flow to route your enquiry to the right service in just a few steps.",
+        "Start directly with the right request. The decision tree guides you to the right inquiry in just a few steps.",
     },
   };
 
@@ -110,15 +104,6 @@ export default function Index() {
                   <a href="/#/dienstleistungen">{t.ctaSecondary}</a>
                 </Button>
               </div>
-              {t.highlights.length ? (
-                <div className="grid gap-3 pt-4 text-sm text-muted-foreground sm:grid-cols-3">
-                  {t.highlights.map((item) => (
-                    <div key={item} className="rounded-lg border bg-background/70 p-3">
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              ) : null}
             </div>
             <div className="relative">
               <div className="absolute -inset-6 rounded-3xl bg-gradient-to-tr from-primary/15 via-transparent to-primary/25" />
