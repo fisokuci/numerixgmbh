@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { ContactCustomerType, ContactResponse } from "@shared/api";
 import { ArrowLeft, ArrowRight, BriefcaseBusiness, Building2, Check, FileText, Landmark, Mail, Phone, Shield, Sparkles, UserRound, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -124,30 +124,20 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<WizardStep>(1);
   const [customerType, setCustomerType] = useState<ContactCustomerType | "">("");
-  const [service, setService] = useState("");
+  const [services, setServices] = useState<string[]>([]);
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
 
   const content = {
     de: {
       steps: ["Auswahl", "Anliegen", "Kontakt"],
-      descriptions: [
-        "Wählen Sie zuerst, ob es um ein privates oder geschäftliches Anliegen geht.",
-        "Was können wir für Sie tun?",
-        "Hinterlassen Sie Ihre Angaben. Wir melden uns per E-Mail bei Ihnen.",
-      ],
       chooseType: "Sind Sie Privatperson oder Unternehmen?",
-      chooseTypeHint:
-        "Je nach Auswahl zeigen wir Ihnen die passenden Themenbereiche.",
       privateTitle: "Privatperson",
       privateText: "Persönliche Unterstützung bei Steuern, Vorsorge und Administration.",
       businessTitle: "Unternehmen",
       businessText: "Begleitung für Treuhand, Steuern und laufende Unternehmensprozesse.",
       serviceTitle: "Was können wir für Sie tun?",
-      serviceHint: "Wählen Sie das Thema, bei dem Sie Unterstützung brauchen.",
       contactTitle: "Wie dürfen wir Sie kontaktieren?",
-      contactHint:
-        "Nach dem Absenden erhalten wir Ihre Anfrage direkt per E-Mail an info@numerixgmbh.ch.",
       fullName: "Voller Name",
       fullNamePlaceholder: "Max Muster",
       email: "E-Mail",
@@ -160,6 +150,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
       selectedType: "Kategorie",
       selectedService: "Anliegen",
       back: "Zurück",
+      next: "Weiter",
       submit: "Anfrage senden",
       sending: "Wird gesendet...",
       successTitle: "Anfrage gesendet",
@@ -167,25 +158,17 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
       errorTitle: "Fehler",
       missingTitle: "Fehlende Angaben",
       missingText: "Bitte füllen Sie Ihren Namen und Ihre E-Mail aus.",
+      missingServices: "Bitte wählen Sie mindestens ein Anliegen aus.",
     },
     en: {
       steps: ["Selection", "Service", "Contact"],
-      descriptions: [
-        "Choose whether this is a private or business enquiry.",
-        "What can we help you with?",
-        "Leave your details and we will get notified by email immediately.",
-      ],
       chooseType: "Are you a private person or a business?",
-      chooseTypeHint: "We will show matching topics based on your selection.",
       privateTitle: "Private person",
       privateText: "Personal support for taxes, retirement planning and administration.",
       businessTitle: "Business",
       businessText: "Support for fiduciary work, taxes and ongoing business operations.",
       serviceTitle: "What can we help you with?",
-      serviceHint: "Choose the topic where you need support.",
       contactTitle: "How can we reach you?",
-      contactHint:
-        "After submission we receive your enquiry directly by email at info@numerixgmbh.ch.",
       fullName: "Full name",
       fullNamePlaceholder: "Max Example",
       email: "Email",
@@ -197,6 +180,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
       selectedType: "Category",
       selectedService: "Request",
       back: "Back",
+      next: "Next",
       submit: "Submit request",
       sending: "Sending...",
       successTitle: "Request sent",
@@ -204,6 +188,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
       errorTitle: "Error",
       missingTitle: "Missing information",
       missingText: "Please provide your full name and email.",
+      missingServices: "Please select at least one request.",
     },
   };
 
@@ -216,7 +201,9 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
         ? businessServices
         : [];
 
-  const selectedService = serviceOptions.find((option) => option.value === service);
+  const selectedServices = serviceOptions.filter((option) =>
+    services.includes(option.value),
+  );
   const selectedTypeLabel =
     customerType === "private"
       ? t.privateTitle
@@ -227,7 +214,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
   const resetWizard = () => {
     setStep(1);
     setCustomerType("");
-    setService("");
+    setServices([]);
     setForm(initialForm);
     setLoading(false);
   };
@@ -251,10 +238,30 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
     }
   };
 
+  const toggleService = (value: string) => {
+    setServices((current) =>
+      current.includes(value)
+        ? current.filter((item) => item !== value)
+        : [...current, value],
+    );
+  };
+
+  const handleStepTwoNext = () => {
+    if (!services.length) {
+      toast({
+        title: t.missingTitle,
+        description: t.missingServices,
+      });
+      return;
+    }
+
+    setStep(3);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!form.fullName.trim() || !form.email.trim() || !customerType || !service) {
+    if (!form.fullName.trim() || !form.email.trim() || !customerType || !services.length) {
       toast({
         title: t.missingTitle,
         description: t.missingText,
@@ -279,7 +286,9 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
           phone: form.phone,
           remarks: form.remarks,
           customerType,
-          service: selectedService?.label[lang as "de" | "en"] ?? service,
+          service: selectedServices
+            .map((item) => item.label[lang as "de" | "en"])
+            .join(", "),
           source: "landing-wizard",
         }),
       });
@@ -331,18 +340,29 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
           <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:32px_32px]" />
 
           <div className="relative flex max-h-[92vh] flex-col overflow-y-auto px-6 py-6 sm:px-8 sm:py-8">
-            <DialogHeader className="space-y-6 text-left">
-              <div className="grid gap-4 md:grid-cols-3">
+            <DialogHeader className="space-y-4 text-left">
+              <div className="flex flex-col items-center gap-3 md:flex-row md:flex-wrap md:justify-center">
                 {t.steps.map((label, index) => {
                   const itemStep = (index + 1) as WizardStep;
                   const isActive = step === itemStep;
                   const isComplete = step > itemStep;
 
                   return (
-                    <div key={label} className="flex items-center gap-3">
+                    <div
+                      key={label}
+                      className={cn(
+                        "grid min-h-[88px] w-full justify-items-center grid-cols-1 items-center gap-3 rounded-[1.5rem] border px-4 py-3 text-center md:min-h-[96px] md:w-[220px] lg:w-[250px]",
+                        isComplete && "border-teal-300/30 bg-teal-300/10",
+                        isActive &&
+                          "border-sky-300/40 bg-slate-900/80 shadow-[0_0_40px_rgba(103,232,249,0.14)]",
+                        !isActive &&
+                          !isComplete &&
+                          "border-slate-800 bg-slate-950/50",
+                      )}
+                    >
                       <div
                         className={cn(
-                          "flex h-12 w-12 items-center justify-center rounded-full border text-lg font-semibold",
+                          "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-base font-semibold",
                           isComplete &&
                             "border-teal-300 bg-teal-300 text-slate-950",
                           isActive &&
@@ -354,11 +374,10 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
                       >
                         {isComplete ? <Check className="h-5 w-5" /> : itemStep}
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-lg font-medium text-slate-100">{label}</p>
-                        <DialogDescription className="text-sm text-slate-400">
-                          {t.descriptions[index]}
-                        </DialogDescription>
+                      <div className="min-w-0 text-center">
+                        <p className="text-xl font-medium leading-none text-slate-100">
+                          {label}
+                        </p>
                       </div>
                     </div>
                   );
@@ -366,16 +385,13 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
               </div>
             </DialogHeader>
 
-            <div className="mt-10 flex-1">
+            <div className="mt-8 flex-1">
               {step === 1 ? (
                 <section className="space-y-6">
-                  <div className="space-y-2">
+                  <div>
                     <DialogTitle className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
                       {t.chooseType}
                     </DialogTitle>
-                    <p className="max-w-2xl text-base text-slate-300">
-                      {t.chooseTypeHint}
-                    </p>
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
@@ -401,7 +417,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
                           type="button"
                           onClick={() => {
                             setCustomerType(option.value);
-                            setService("");
+                            setServices([]);
                             setStep(2);
                           }}
                           className="group rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 text-left transition duration-200 hover:border-teal-300/60 hover:bg-slate-900"
@@ -428,82 +444,106 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
               ) : null}
 
               {step === 2 ? (
-                <section className="space-y-6">
-                  <div className="space-y-2">
+                <section className="mx-auto max-w-4xl space-y-4">
+                  <div>
                     <DialogTitle className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
                       {t.serviceTitle}
                     </DialogTitle>
-                    <p className="max-w-2xl text-base text-slate-300">
-                      {t.serviceHint}
-                    </p>
                   </div>
 
-                  <div className="grid gap-4">
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                     {serviceOptions.map((option) => {
                       const Icon = option.icon;
+                      const isSelected = services.includes(option.value);
 
                       return (
                         <button
                           key={option.value}
                           type="button"
-                          onClick={() => {
-                            setService(option.value);
-                            setStep(3);
-                          }}
+                          onClick={() => toggleService(option.value)}
                           className={cn(
-                            "group flex w-full items-center gap-4 rounded-[1.75rem] border bg-slate-950/70 px-5 py-5 text-left transition duration-200",
-                            service === option.value
+                            "group relative flex min-h-[138px] w-full flex-col items-start gap-3 rounded-[1.5rem] border bg-slate-950/70 px-4 py-4 text-left transition duration-200",
+                            isSelected
                               ? "border-teal-300/70 bg-teal-300/10 shadow-[0_0_0_1px_rgba(94,234,212,0.15)]"
                               : "border-slate-800 hover:border-sky-300/40 hover:bg-slate-900",
                           )}
                         >
-                          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-teal-300 ring-1 ring-white/10">
-                            <Icon className="h-6 w-6" />
+                          <div
+                            className={cn(
+                              "absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border text-xs font-semibold",
+                              isSelected
+                                ? "border-teal-300 bg-teal-300 text-slate-950"
+                                : "border-slate-700 bg-slate-900 text-slate-500",
+                            )}
+                          >
+                            {isSelected ? <Check className="h-4 w-4" /> : null}
+                          </div>
+                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-teal-300 ring-1 ring-white/10">
+                            <Icon className="h-5 w-5" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-2xl font-semibold text-white">
+                            <p className="text-lg font-semibold text-white">
                               {option.label[lang as "de" | "en"]}
                             </p>
-                            <p className="mt-1 text-base text-slate-300">
+                            <p className="mt-1 text-sm leading-5 text-slate-300">
                               {option.description[lang as "de" | "en"]}
                             </p>
                           </div>
-                          <ArrowRight className="h-5 w-5 text-slate-500 transition group-hover:translate-x-1 group-hover:text-teal-300" />
                         </button>
                       );
                     })}
+                  </div>
+
+                  <div className="sticky bottom-0 z-10 -mx-2 flex flex-col-reverse gap-3 border-t border-slate-800 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent px-2 pb-1 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={handleBack}
+                      className="justify-start rounded-full px-0 text-slate-300 hover:bg-transparent hover:text-white"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      {t.back}
+                    </Button>
+
+                    <Button
+                      type="button"
+                      onClick={handleStepTwoNext}
+                      className="h-12 rounded-full bg-gradient-to-r from-teal-300 via-sky-300 to-fuchsia-400 px-6 text-base font-semibold text-slate-950 hover:opacity-90"
+                    >
+                      {t.next}
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
                   </div>
                 </section>
               ) : null}
 
               {step === 3 ? (
-                <section className="space-y-6">
-                  <div className="space-y-2">
+                <section className="mx-auto max-w-4xl space-y-5">
+                  <div>
                     <DialogTitle className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
                       {t.contactTitle}
                     </DialogTitle>
-                    <p className="max-w-2xl text-base text-slate-300">
-                      {t.contactHint}
-                    </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {selectedTypeLabel ? (
-                      <div className="rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-sm text-slate-200">
+                      <div className="rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.12em] text-slate-200">
                         <span className="text-slate-400">{t.selectedType}:</span>{" "}
                         {selectedTypeLabel}
                       </div>
                     ) : null}
-                    {selectedService ? (
-                      <div className="rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-sm text-slate-200">
-                        <span className="text-slate-400">{t.selectedService}:</span>{" "}
-                        {selectedService.label[lang as "de" | "en"]}
+                    {selectedServices.map((item) => (
+                      <div
+                        key={item.value}
+                        className="rounded-full border border-teal-300/25 bg-teal-300/10 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.12em] text-teal-100"
+                      >
+                        {item.label[lang as "de" | "en"]}
                       </div>
-                    ) : null}
+                    ))}
                   </div>
 
-                  <form className="grid gap-5" onSubmit={handleSubmit}>
-                    <div className="grid gap-5 md:grid-cols-2">
+                  <form className="grid gap-4" onSubmit={handleSubmit}>
+                    <div className="grid gap-4 md:grid-cols-2">
                       <label className="space-y-2">
                         <span className="text-sm font-medium text-slate-200">
                           {t.fullName}
@@ -543,27 +583,27 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
                           />
                         </div>
                       </label>
-                    </div>
 
-                    <label className="space-y-2">
-                      <span className="text-sm font-medium text-slate-200">
-                        {t.phone}
-                      </span>
-                      <div className="relative">
-                        <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                        <Input
-                          value={form.phone}
-                          onChange={(event) =>
-                            setForm((current) => ({
-                              ...current,
-                              phone: event.target.value,
-                            }))
-                          }
-                          placeholder={t.phonePlaceholder}
-                          className="h-12 rounded-2xl border-slate-700 bg-slate-950/80 pl-11 text-white placeholder:text-slate-500"
-                        />
-                      </div>
-                    </label>
+                      <label className="space-y-2">
+                        <span className="text-sm font-medium text-slate-200">
+                          {t.phone}
+                        </span>
+                        <div className="relative">
+                          <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                          <Input
+                            value={form.phone}
+                            onChange={(event) =>
+                              setForm((current) => ({
+                                ...current,
+                                phone: event.target.value,
+                              }))
+                            }
+                            placeholder={t.phonePlaceholder}
+                            className="h-12 rounded-2xl border-slate-700 bg-slate-950/80 pl-11 text-white placeholder:text-slate-500"
+                          />
+                        </div>
+                      </label>
+                    </div>
 
                     <label className="space-y-2">
                       <span className="text-sm font-medium text-slate-200">
@@ -578,8 +618,8 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
                           }))
                         }
                         placeholder={t.remarksPlaceholder}
-                        rows={5}
-                        className="min-h-[140px] rounded-[1.5rem] border-slate-700 bg-slate-950/80 text-white placeholder:text-slate-500"
+                        rows={4}
+                        className="min-h-[112px] rounded-[1.5rem] border-slate-700 bg-slate-950/80 text-white placeholder:text-slate-500"
                       />
                     </label>
 
@@ -608,7 +648,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
               ) : null}
             </div>
 
-            {step < 3 ? (
+            {step === 1 ? (
               <div className="mt-8 border-t border-slate-800 pt-5">
                 <Button
                   type="button"
