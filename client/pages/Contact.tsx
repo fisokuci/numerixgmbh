@@ -103,6 +103,7 @@ export default function Contact() {
           surname: form.surname,
           email: form.email,
           message: form.message,
+          source: "contact-page",
         }),
       });
       const contentType = res.headers.get("content-type") ?? "";

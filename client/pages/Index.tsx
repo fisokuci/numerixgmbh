@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { InquiryWizard } from "@/components/InquiryWizard";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const HERO_URL = "./landing_page_numerix.jpg";
@@ -13,7 +14,7 @@ export default function Index() {
       subline: "Treuhand neu gedacht",
       body:
         "Ihr Unternehmen verdient einen Partner, der nicht nur verwaltet, sondern mitdenkt. Numerix GmbH steht für digitale Prozesse, transparente Beratung und messbaren Mehrwert. Gemeinsam schaffen wir eine stabile finanzielle Basis für nachhaltiges Wachstum.",
-      ctaPrimary: "Kontakt aufnehmen",
+      ctaPrimary: "Anfrage starten",
       ctaSecondary: "Leistungen ansehen",
       highlights: [],
       processTitle: "So arbeiten wir",
@@ -34,9 +35,9 @@ export default function Index() {
             "Regelmäßige Reviews und klare Kommunikation auf Augenhöhe.",
         },
       ],
-      ctaTitle: "Bereit für klare Zahlen?",
+      ctaTitle: "Bereit für den ersten Schritt?",
       ctaText:
-        "Wir zeigen Ihnen, wie wir Ihre Administration entlasten und Entscheidungen vereinfachen.",
+        "Starten Sie direkt mit dem passenden Anliegen. Der Entscheidungsbaum führt Sie in wenigen Schritten zur richtigen Anfrage.",
     },
     en: {
       eyebrow: "Numerix GmbH",
@@ -45,7 +46,7 @@ export default function Index() {
       subline: "Fiduciary reimagined",
       body:
         "We bring structure to finance, payroll and administration with transparency, efficiency and clear decisions.",
-      ctaPrimary: "Get in touch",
+      ctaPrimary: "Get Started",
       ctaSecondary: "View services",
       highlights: [
         "Digital collaboration with clear processes.",
@@ -70,9 +71,9 @@ export default function Index() {
             "Regular reviews and clear communication at eye level.",
         },
       ],
-      ctaTitle: "Ready for clarity in your numbers?",
+      ctaTitle: "Ready to get started?",
       ctaText:
-        "We show you how we reduce admin effort and simplify decisions.",
+        "Use the guided flow to route your enquiry to the right service in just a few steps.",
     },
   };
 
@@ -102,9 +103,9 @@ export default function Index() {
                 <p className="max-w-2xl text-muted-foreground">{t.body}</p>
               ) : null}
               <div className="flex flex-wrap gap-3">
-                <Button asChild>
-                  <a href="/#/kontakt">{t.ctaPrimary}</a>
-                </Button>
+                <InquiryWizard>
+                  <Button>{t.ctaPrimary}</Button>
+                </InquiryWizard>
                 <Button asChild variant="outline">
                   <a href="/#/dienstleistungen">{t.ctaSecondary}</a>
                 </Button>
@@ -165,9 +166,9 @@ export default function Index() {
               {t.ctaText}
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Button asChild>
-                <a href="/#/kontakt">{t.ctaPrimary}</a>
-              </Button>
+              <InquiryWizard>
+                <Button>{t.ctaPrimary}</Button>
+              </InquiryWizard>
               <Button asChild variant="outline">
                 <a href="/#/dienstleistungen">{t.ctaSecondary}</a>
               </Button>

@@ -11,11 +11,21 @@ export interface DemoResponse {
   message: string;
 }
 
+export type ContactCustomerType = "private" | "business";
+
+export type ContactSource = "contact-page" | "landing-wizard";
+
 export interface ContactRequest {
-  name: string;
-  surname: string;
+  fullName?: string;
+  name?: string;
+  surname?: string;
   email: string;
+  phone?: string;
   message?: string;
+  remarks?: string;
+  customerType?: ContactCustomerType;
+  service?: string;
+  source?: ContactSource;
 }
 
 export interface ContactResponse {
