@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { isCookiebotActive } from "@/lib/cookiebot";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ShieldCheck } from "lucide-react";
 
@@ -12,11 +13,8 @@ export default function CookieSettingsButton({
   variant = "outline",
 }: CookieSettingsButtonProps) {
   const { lang } = useLanguage();
-  const enabled =
-    (import.meta.env.VITE_COOKIEBOT_ENABLED as string | undefined)?.trim() ===
-    "true";
 
-  if (!enabled) return null;
+  if (!isCookiebotActive()) return null;
 
   return (
     <Button

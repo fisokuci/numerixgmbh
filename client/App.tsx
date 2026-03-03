@@ -18,6 +18,7 @@ import Admin from "./pages/Admin";
 import UmamiAnalytics from "@/components/UmamiAnalytics";
 import Privacy from "./pages/Privacy";
 import SiteFooter from "@/components/SiteFooter";
+import CookiebotBanner from "@/components/CookiebotBanner";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <CookiebotBanner />
         <UmamiAnalytics />
         <Toaster />
         <Sonner />
