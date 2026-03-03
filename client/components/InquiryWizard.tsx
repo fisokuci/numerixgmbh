@@ -375,7 +375,8 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-h-[92vh] max-w-5xl overflow-hidden border-slate-800 bg-slate-950 p-0 text-slate-50">
         <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(45,212,191,0.14),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.1),_transparent_26%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.12),_transparent_34%),linear-gradient(135deg,_rgba(2,6,23,0.98),_rgba(2,6,23,0.94)_45%,_rgba(17,24,39,0.96)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(45,212,191,0.22),_transparent_32%),radial-gradient(circle_at_top_right,_rgba(96,165,250,0.18),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.2),_transparent_34%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:32px_32px]" />
 
           <div className="relative flex max-h-[92vh] flex-col overflow-y-auto px-6 py-6 sm:px-8 sm:py-8">
             <DialogHeader className="space-y-4 text-left">
