@@ -144,7 +144,7 @@ const businessServices: ServiceOption[] = [
     value: "rundumbetreuung",
     label: { de: "Rundumbetreuung", en: "Full-service support" },
     description: {
-      de: "Ganzheitliche Begleitung für Finanzen und Administration.",
+      de: "Ganzheitliche Begleitung für Finanzen & Administration.",
       en: "Holistic support across finance and administration.",
     },
     icon: Sparkles,
