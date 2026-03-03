@@ -33,6 +33,7 @@ export default defineConfig(({ command, mode }) => {
     plugins: [
       react(),
       cookiebotHtmlPlugin({
+        enabled: env.COOKIEBOT_ENABLED,
         cbid: env.COOKIEBOT_CBID,
         culture: env.COOKIEBOT_CULTURE,
         blockingMode: env.COOKIEBOT_BLOCKING_MODE,
@@ -61,10 +62,12 @@ function expressPlugin(): Plugin {
 }
 
 function cookiebotHtmlPlugin(options: {
+  enabled?: string;
   cbid?: string;
   culture?: string;
   blockingMode?: string;
 }): Plugin {
+  const enabled = options.enabled?.trim().toLowerCase() === "true";
   const cbid = options.cbid?.trim();
   const culture = options.culture?.trim();
   const blockingMode = options.blockingMode?.trim().toLowerCase();
@@ -72,7 +75,7 @@ function cookiebotHtmlPlugin(options: {
   return {
     name: "cookiebot-html-plugin",
     transformIndexHtml(html) {
-      if (!cbid) return html;
+      if (!enabled || !cbid) return html;
 
       if (blockingMode === "auto") {
         console.warn(

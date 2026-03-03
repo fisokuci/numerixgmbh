@@ -12,6 +12,11 @@ export default function CookieSettingsButton({
   variant = "outline",
 }: CookieSettingsButtonProps) {
   const { lang } = useLanguage();
+  const enabled =
+    (import.meta.env.VITE_COOKIEBOT_ENABLED as string | undefined)?.trim() ===
+    "true";
+
+  if (!enabled) return null;
 
   return (
     <Button
