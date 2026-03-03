@@ -16,6 +16,8 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Admin from "./pages/Admin";
 import UmamiAnalytics from "@/components/UmamiAnalytics";
+import Privacy from "./pages/Privacy";
+import SiteFooter from "@/components/SiteFooter";
 
 const queryClient = new QueryClient();
 
@@ -36,9 +38,12 @@ export default function App() {
               <Route path="/uber-uns" element={<AboutUs />} />
               <Route path="/kontakt" element={<Contact />} />
               <Route path="/formulare" element={<Forms />} />
+              <Route path="/datenschutz" element={<Privacy />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <SiteFooter />
           </LanguageProvider>
         </HashRouter>
       </TooltipProvider>

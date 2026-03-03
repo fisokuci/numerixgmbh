@@ -1,10 +1,11 @@
-import { defineConfig, Plugin } from "vite";
+import { defineConfig, loadEnv, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { createServer } from "./server";
 
 export default defineConfig(({ command, mode }) => {
   const isDev = command === "serve";
+  const env = loadEnv(mode, process.cwd(), "");
 
   return {
     base: '/',
@@ -31,6 +32,11 @@ export default defineConfig(({ command, mode }) => {
 
     plugins: [
       react(),
+      cookiebotHtmlPlugin({
+        cbid: env.COOKIEBOT_CBID,
+        culture: env.COOKIEBOT_CULTURE,
+        blockingMode: env.COOKIEBOT_BLOCKING_MODE,
+      }),
       ...(isDev ? [expressPlugin()] : []),
     ],
 
@@ -52,4 +58,58 @@ function expressPlugin(): Plugin {
       server.middlewares.use(app);
     },
   };
+}
+
+function cookiebotHtmlPlugin(options: {
+  cbid?: string;
+  culture?: string;
+  blockingMode?: string;
+}): Plugin {
+  const cbid = options.cbid?.trim();
+  const culture = options.culture?.trim();
+  const blockingMode = options.blockingMode?.trim().toLowerCase();
+
+  return {
+    name: "cookiebot-html-plugin",
+    transformIndexHtml(html) {
+      if (!cbid) return html;
+
+      if (blockingMode === "auto") {
+        console.warn(
+          "COOKIEBOT_BLOCKING_MODE=auto is ignored because it would block the SPA bootstrap script.",
+        );
+      }
+
+      const scriptLoader = [
+        "    <script>",
+        '      (function () {',
+        '        var hostname = window.location.hostname;',
+        '        var isLocal = hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";',
+        "        if (isLocal) return;",
+        '        var script = document.createElement("script");',
+        `        script.id = "Cookiebot";`,
+        `        script.src = "https://consent.cookiebot.com/uc.js";`,
+        `        script.type = "text/javascript";`,
+        "        script.async = true;",
+        `        script.setAttribute("data-cbid", "${escapeJsString(cbid)}");`,
+        ...(culture
+          ? [
+              `        script.setAttribute("data-culture", "${escapeJsString(culture)}");`,
+            ]
+          : []),
+        "        document.head.appendChild(script);",
+        "      })();",
+        "    </script>",
+      ].join("\n");
+
+      return html.replace("</head>", `${scriptLoader}\n  </head>`);
+    },
+  };
+}
+
+function escapeJsString(value: string) {
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "\\n");
 }

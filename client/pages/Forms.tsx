@@ -42,6 +42,7 @@ export default function Forms() {
           description: "Datenschutzmitteilung gemäß geltenden Bestimmungen.",
           category: "Compliance",
           color: "bg-green-500/20 text-green-700",
+          href: "/#/datenschutz",
         },
         {
           title: "Vollmachtsformular",
@@ -103,6 +104,7 @@ export default function Forms() {
             "Privacy notification in accordance with applicable regulations.",
           category: "Compliance",
           color: "bg-green-500/20 text-green-700",
+          href: "/#/privacy",
         },
         {
           title: "Power of Attorney",
@@ -228,6 +230,11 @@ export default function Forms() {
                       variant="outline"
                       className="w-full rounded-xl border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all group/btn"
                       onClick={() => {
+                        if ("href" in form && form.href) {
+                          window.location.href = form.href;
+                          return;
+                        }
+
                         alert(
                           `${lang === "de" ? "Formular wird heruntergeladen" : "Form downloading"}: ${form.title}`,
                         );
