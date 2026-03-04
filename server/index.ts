@@ -4,6 +4,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleContact } from "./routes/contact";
 import {
+  handleAdminChangePassword,
   handleAdminLogin,
   handleAdminLogout,
   handleAdminSession,
@@ -28,6 +29,7 @@ export function createServer() {
   app.post("/api/admin/login", handleAdminLogin);
   app.get("/api/admin/session", handleAdminSession);
   app.post("/api/admin/logout", handleAdminLogout);
+  app.post("/api/admin/password", handleAdminChangePassword);
 
   app.use("/api", (_req, res) => {
     res.status(404).json({ ok: false, message: "Not found" });

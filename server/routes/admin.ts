@@ -2,11 +2,17 @@ import { randomBytes } from "node:crypto";
 import type { Request, RequestHandler } from "express";
 import { z } from "zod";
 import type {
+  AdminChangePasswordRequest,
   AdminLoginRequest,
   AdminLoginResponse,
   AdminSessionResponse,
   AdminUmamiConfig,
 } from "@shared/api";
+import {
+  getAdminAuthStorePath,
+  getAdminCredentials,
+  persistAdminPassword,
+} from "../admin-auth-store";
 
 const DEFAULT_UMAMI_SCRIPT_URL = "https://cloud.umami.is/script.js";
 const DEFAULT_SESSION_TTL_MINUTES = 8 * 60;
@@ -16,6 +22,20 @@ const AdminLoginSchema = z.object({
   username: z.string().min(1),
   password: z.string().min(1),
 });
+
+const AdminChangePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1),
+    newPassword: z.string().min(8),
+  })
+  .refine(
+    ({ currentPassword, newPassword }) =>
+      currentPassword.trim() !== newPassword.trim(),
+    {
+      message: "New password must be different from the current password.",
+      path: ["newPassword"],
+    },
+  );
 
 const parsePositiveInt = (value: string | undefined, fallback: number) => {
   const parsed = Number.parseInt(value ?? "", 10);
@@ -33,11 +53,6 @@ const pruneExpiredSessions = () => {
     if (expiresAt <= now) sessions.delete(token);
   }
 };
-
-const getAdminCredentials = () => ({
-  username: (process.env.ADMIN_USERNAME ?? "admin").trim(),
-  password: (process.env.ADMIN_PASSWORD ?? "").trim(),
-});
 
 const getUmamiConfig = (): AdminUmamiConfig => {
   const websiteId = (
@@ -98,10 +113,10 @@ export const handleAdminLogin: RequestHandler = (req, res) => {
     } satisfies AdminLoginResponse);
   }
 
-  const { username: expectedUsername, password: expectedPassword } =
-    getAdminCredentials();
+  const credentials = getAdminCredentials();
 
-  if (!expectedPassword) {
+  const envPassword = (process.env.ADMIN_PASSWORD ?? "").trim();
+  if (credentials.source === "env" && !envPassword) {
     return res.status(503).json({
       ok: false,
       message: "Admin authentication is not configured.",
@@ -109,7 +124,10 @@ export const handleAdminLogin: RequestHandler = (req, res) => {
   }
 
   const { username, password } = parsed.data;
-  if (username !== expectedUsername || password !== expectedPassword) {
+  if (
+    username.trim() !== credentials.username ||
+    !credentials.passwordMatches(password)
+  ) {
     return res.status(401).json({
       ok: false,
       message: "Invalid credentials.",
@@ -152,5 +170,55 @@ export const handleAdminLogout: RequestHandler = (req, res) => {
   return res.status(200).json({
     ok: true,
     message: "Logged out.",
+  } satisfies AdminLoginResponse);
+};
+
+export const handleAdminChangePassword: RequestHandler = (req, res) => {
+  const session = getValidSession(req);
+  if (!session) {
+    return res.status(401).json({
+      ok: false,
+      message: "Unauthorized.",
+    } satisfies AdminLoginResponse);
+  }
+
+  const parsed = AdminChangePasswordSchema.safeParse(
+    req.body as AdminChangePasswordRequest,
+  );
+  if (!parsed.success) {
+    const message = parsed.error.issues[0]?.message ?? "Invalid payload.";
+    return res.status(400).json({
+      ok: false,
+      message,
+    } satisfies AdminLoginResponse);
+  }
+
+  const credentials = getAdminCredentials();
+  const { currentPassword, newPassword } = parsed.data;
+  if (!credentials.passwordMatches(currentPassword)) {
+    return res.status(401).json({
+      ok: false,
+      message: "Current password is incorrect.",
+    } satisfies AdminLoginResponse);
+  }
+
+  try {
+    persistAdminPassword(credentials.username, newPassword);
+  } catch (error) {
+    console.error(
+      `Failed to persist admin password to ${getAdminAuthStorePath()}:`,
+      error,
+    );
+    return res.status(500).json({
+      ok: false,
+      message:
+        "Password could not be saved on this server. Configure a persistent admin auth store for this deployment.",
+    } satisfies AdminLoginResponse);
+  }
+
+  sessions.clear();
+  return res.status(200).json({
+    ok: true,
+    message: "Password updated. Please sign in again.",
   } satisfies AdminLoginResponse);
 };

@@ -38,6 +38,11 @@ export interface AdminLoginRequest {
   password: string;
 }
 
+export interface AdminChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export interface AdminUmamiConfig {
   configured: boolean;
   websiteId: string;

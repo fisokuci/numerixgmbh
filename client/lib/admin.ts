@@ -1,4 +1,5 @@
 import type {
+  AdminChangePasswordRequest,
   AdminLoginRequest,
   AdminLoginResponse,
   AdminSessionResponse,
@@ -73,6 +74,23 @@ export const logoutAdmin = async (token: string) => {
   const response = await fetch(toApiUrl("/api/admin/logout"), {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const data = await readJson<AdminLoginResponse>(response);
+  return { response, data };
+};
+
+export const changeAdminPassword = async (
+  token: string,
+  payload: AdminChangePasswordRequest,
+) => {
+  const response = await fetch(toApiUrl("/api/admin/password"), {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
   });
 
   const data = await readJson<AdminLoginResponse>(response);
