@@ -3,27 +3,25 @@ import {
   hasCookiebotStatisticsConsent,
   isCookiebotActive,
 } from "@/lib/cookiebot";
-
-const SCRIPT_ID = "umami-analytics-script";
-const DEFAULT_SCRIPT_URL = "https://cloud.umami.is/script.js";
+import {
+  DEFAULT_UMAMI_SCRIPT_URL,
+  getFrontendUmamiConfig,
+  UMAMI_SCRIPT_ID,
+} from "@/lib/umami";
 
 export default function UmamiAnalytics() {
   useEffect(() => {
-    const websiteId = (
-      import.meta.env.VITE_UMAMI_WEBSITE_ID as string | undefined
-    )?.trim();
+    const { websiteId, scriptUrl } = getFrontendUmamiConfig();
     if (!websiteId) return;
 
     const loadUmami = () => {
-      const existingScript = document.getElementById(SCRIPT_ID);
+      const existingScript = document.getElementById(UMAMI_SCRIPT_ID);
       if (existingScript) return;
 
       const script = document.createElement("script");
-      script.id = SCRIPT_ID;
+      script.id = UMAMI_SCRIPT_ID;
       script.defer = true;
-      script.src =
-        (import.meta.env.VITE_UMAMI_SCRIPT_URL as string | undefined)?.trim() ||
-        DEFAULT_SCRIPT_URL;
+      script.src = scriptUrl || DEFAULT_UMAMI_SCRIPT_URL;
       script.setAttribute("data-website-id", websiteId);
       script.setAttribute("data-auto-track", "true");
       script.setAttribute("data-do-not-track", "true");
