@@ -34,9 +34,12 @@ describe("admin auth store", () => {
     const credentials = getAdminCredentials();
 
     expect(credentials.source).toBe("env");
+    expect(credentials.configured).toBe(true);
     expect(credentials.username).toBe("admin");
     expect(credentials.passwordMatches("secret-123")).toBe(true);
     expect(credentials.passwordMatches("wrong-password")).toBe(false);
+    expect(credentials.signingSecret).toBe("secret-123");
+    expect(credentials.tokenVersion).not.toBe("");
   });
 
   it("prefers persisted credentials over env credentials", () => {
@@ -52,8 +55,11 @@ describe("admin auth store", () => {
     const credentials = getAdminCredentials();
 
     expect(credentials.source).toBe("file");
+    expect(credentials.configured).toBe(true);
     expect(credentials.username).toBe("admin");
     expect(credentials.passwordMatches("new-password-123")).toBe(true);
     expect(credentials.passwordMatches("old-password")).toBe(false);
+    expect(credentials.signingSecret).toContain("scrypt:");
+    expect(credentials.tokenVersion).not.toBe("");
   });
 });

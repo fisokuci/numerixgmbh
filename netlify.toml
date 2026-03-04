@@ -18,3 +18,27 @@
   from = "/api/contact"
   status = 200
   to = "/.netlify/functions/contact"
+
+[[redirects]]
+  force = true
+  from = "/api/admin/login"
+  status = 200
+  to = "/.netlify/functions/admin-login"
+
+[[redirects]]
+  force = true
+  from = "/api/admin/session"
+  status = 200
+  to = "/.netlify/functions/admin-session"
+
+[[redirects]]
+  force = true
+  from = "/api/admin/logout"
+  status = 200
+  to = "/.netlify/functions/admin-logout"
+
+[[redirects]]
+  force = true
+  from = "/api/admin/password"
+  status = 200
+  to = "/.netlify/functions/admin-password"

@@ -1,4 +1,5 @@
 import {
+  createHash,
   randomBytes,
   scryptSync,
   timingSafeEqual,
@@ -28,9 +29,15 @@ interface StoredAdminCredentials {
 
 export interface AdminCredentials {
   username: string;
+  configured: boolean;
   passwordMatches: (password: string) => boolean;
+  signingSecret: string;
+  tokenVersion: string;
   source: "env" | "file";
 }
+
+const hashTokenVersion = (value: string) =>
+  createHash("sha256").update(value).digest("hex");
 
 const getAuthFilePath = () =>
   (process.env.ADMIN_AUTH_FILE_PATH ?? DEFAULT_AUTH_FILE_PATH).trim();
@@ -84,9 +91,12 @@ export const getAdminCredentials = (): AdminCredentials => {
   const stored = readStoredCredentials();
   if (stored?.username && stored.passwordHash) {
     return {
+      configured: true,
       username: stored.username,
       passwordMatches: (password) =>
         verifyPasswordHash(password.trim(), stored.passwordHash),
+      signingSecret: stored.passwordHash,
+      tokenVersion: hashTokenVersion(`${stored.username}:${stored.passwordHash}`),
       source: "file",
     };
   }
@@ -95,8 +105,11 @@ export const getAdminCredentials = (): AdminCredentials => {
   const password = (process.env.ADMIN_PASSWORD ?? "").trim();
 
   return {
+    configured: Boolean(password),
     username,
     passwordMatches: (candidate) => candidate.trim() === password,
+    signingSecret: password,
+    tokenVersion: password ? hashTokenVersion(`${username}:${password}`) : "",
     source: "env",
   };
 };
