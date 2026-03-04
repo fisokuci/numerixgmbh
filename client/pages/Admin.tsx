@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import type { AdminUmamiConfig } from "@shared/api";
 
 type AuthState = "checking" | "guest" | "authenticated";
+const DEFAULT_UMAMI_SCRIPT_URL = "https://cloud.umami.is/script.js";
 
 const formatDateTime = (value?: string) => {
   if (!value) return "-";
@@ -32,6 +33,45 @@ const formatDateTime = (value?: string) => {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
+};
+
+const getPublicUmamiConfig = (): AdminUmamiConfig => {
+  const websiteId = (
+    import.meta.env.VITE_UMAMI_WEBSITE_ID as string | undefined
+  )?.trim() ?? "";
+  const scriptUrl = (
+    import.meta.env.VITE_UMAMI_SCRIPT_URL as string | undefined
+  )?.trim() || DEFAULT_UMAMI_SCRIPT_URL;
+  const dashboardUrl = (
+    import.meta.env.VITE_UMAMI_DASHBOARD_URL as string | undefined
+  )?.trim();
+  const shareUrl = (
+    import.meta.env.VITE_UMAMI_SHARE_URL as string | undefined
+  )?.trim();
+
+  return {
+    configured: Boolean(websiteId),
+    websiteId,
+    scriptUrl,
+    dashboardUrl: dashboardUrl || undefined,
+    shareUrl: shareUrl || undefined,
+  };
+};
+
+const mergeUmamiConfig = (config?: AdminUmamiConfig): AdminUmamiConfig => {
+  const fallback = getPublicUmamiConfig();
+  const websiteId = config?.websiteId?.trim() || fallback.websiteId;
+  const scriptUrl = config?.scriptUrl?.trim() || fallback.scriptUrl;
+  const dashboardUrl = config?.dashboardUrl?.trim() || fallback.dashboardUrl;
+  const shareUrl = config?.shareUrl?.trim() || fallback.shareUrl;
+
+  return {
+    configured: Boolean(websiteId),
+    websiteId,
+    scriptUrl,
+    dashboardUrl,
+    shareUrl,
+  };
 };
 
 export default function Admin() {
@@ -46,6 +86,7 @@ export default function Admin() {
   const [expiresAt, setExpiresAt] = useState("");
   const [umami, setUmami] = useState<AdminUmamiConfig | undefined>(undefined);
   const [iframeBlocked, setIframeBlocked] = useState(false);
+  const resolvedUmami = mergeUmamiConfig(umami);
 
   useEffect(() => {
     const token = getAdminToken();
@@ -68,7 +109,7 @@ export default function Admin() {
 
         setAuthState("authenticated");
         setExpiresAt(data.expiresAt ?? "");
-        setUmami(data.umami);
+        setUmami(mergeUmamiConfig(data.umami));
       } catch {
         if (isCancelled) return;
         clearAdminToken();
@@ -98,7 +139,7 @@ export default function Admin() {
       setAuthState("authenticated");
       setPassword("");
       setExpiresAt(data.expiresAt ?? "");
-      setUmami(data.umami);
+      setUmami(mergeUmamiConfig(data.umami));
 
       toast({
         title:
@@ -211,8 +252,8 @@ export default function Admin() {
     }
   };
 
-  const hasShareUrl = Boolean(umami?.shareUrl);
-  const hasDashboardUrl = Boolean(umami?.dashboardUrl);
+  const hasShareUrl = Boolean(resolvedUmami.shareUrl);
+  const hasDashboardUrl = Boolean(resolvedUmami.dashboardUrl);
 
   return (
     <div className="relative min-h-screen bg-background">
@@ -401,7 +442,7 @@ export default function Admin() {
                 <p>
                   {lang === "de" ? "Status:" : "Status:"}{" "}
                   <span className="font-medium text-foreground">
-                    {umami?.configured
+                    {resolvedUmami.configured
                       ? lang === "de"
                         ? "Konfiguriert"
                         : "Configured"
@@ -413,20 +454,20 @@ export default function Admin() {
                 <p>
                   {lang === "de" ? "Website ID:" : "Website ID:"}{" "}
                   <span className="font-medium text-foreground">
-                    {umami?.websiteId || "-"}
+                    {resolvedUmami.websiteId || "-"}
                   </span>
                 </p>
                 <p>
                   {lang === "de" ? "Script URL:" : "Script URL:"}{" "}
                   <span className="font-medium text-foreground">
-                    {umami?.scriptUrl || "-"}
+                    {resolvedUmami.scriptUrl || "-"}
                   </span>
                 </p>
 
                 {hasDashboardUrl ? (
                   <Button asChild variant="secondary">
                     <a
-                      href={umami?.dashboardUrl}
+                      href={resolvedUmami.dashboardUrl}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -456,7 +497,11 @@ export default function Admin() {
                 <CardContent>
                   <div className="mb-4">
                     <Button asChild variant="secondary">
-                      <a href={umami?.shareUrl} target="_blank" rel="noreferrer">
+                      <a
+                        href={resolvedUmami.shareUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         {lang === "de"
                           ? "Share URL in neuem Tab öffnen"
                           : "Open share URL in new tab"}
@@ -472,7 +517,7 @@ export default function Admin() {
                   ) : null}
                   <iframe
                     title="Umami analytics"
-                    src={umami?.shareUrl}
+                    src={resolvedUmami.shareUrl}
                     className="w-full h-[760px] rounded-md border"
                     onError={() => setIframeBlocked(true)}
                   />
