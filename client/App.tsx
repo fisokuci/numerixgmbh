@@ -20,6 +20,7 @@ import Privacy from "./pages/Privacy";
 import SiteFooter from "@/components/SiteFooter";
 import CookiebotBanner from "@/components/CookiebotBanner";
 import Imprint from "./pages/Imprint";
+import StartInquiry from "./pages/StartInquiry";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ export default function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/anfrage-starten" element={<StartInquiry />} />
               <Route path="/dienstleistungen" element={<Products />} />
               <Route path="/uber-uns" element={<AboutUs />} />
               <Route path="/kontakt" element={<Contact />} />

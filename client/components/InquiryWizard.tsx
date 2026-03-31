@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import type { ContactCustomerType, ContactResponse } from "@shared/api";
 import { ArrowLeft, ArrowRight, BriefcaseBusiness, Building2, Check, FileText, Landmark, Mail, Phone, Shield, Sparkles, UserRound, Wallet } from "lucide-react";
@@ -197,9 +198,20 @@ const initialForm = {
   remarks: "",
 };
 
-export function InquiryWizard({ children }: { children: ReactNode }) {
+type InquiryWizardProps = {
+  children?: ReactNode;
+  openOnMount?: boolean;
+  redirectOnClose?: string;
+};
+
+export function InquiryWizard({
+  children,
+  openOnMount = false,
+  redirectOnClose,
+}: InquiryWizardProps) {
   const { lang } = useLanguage();
-  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(openOnMount);
   const [step, setStep] = useState<WizardStep>(1);
   const [customerType, setCustomerType] = useState<ContactCustomerType | "">("");
   const [services, setServices] = useState<string[]>([]);
@@ -298,9 +310,19 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
+  const closeWizard = () => {
+    resetWizard();
+    setOpen(false);
+
+    if (redirectOnClose) {
+      navigate(redirectOnClose, { replace: true });
+    }
+  };
+
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen && !loading) {
-      resetWizard();
+      closeWizard();
+      return;
     }
 
     setOpen(nextOpen);
@@ -395,8 +417,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
         title: t.successTitle,
         description: t.successText,
       });
-      setOpen(false);
-      resetWizard();
+      closeWizard();
     } catch (error) {
       const description =
         error instanceof Error ? error.message : t.errorTitle;
@@ -412,7 +433,7 @@ export function InquiryWizard({ children }: { children: ReactNode }) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
       <DialogContent className="max-h-[92vh] max-w-5xl overflow-hidden border-slate-800 bg-slate-950 p-0 text-slate-50">
         <div className="relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(45,212,191,0.22),_transparent_32%),radial-gradient(circle_at_top_right,_rgba(96,165,250,0.18),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.2),_transparent_34%)]" />
