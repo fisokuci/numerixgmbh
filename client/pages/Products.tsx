@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const HERO_URL = "./logo_header.jpeg";
+const UNIFIED_ICON_COLOR = "from-cyan-500 to-cyan-600";
 
 type ServiceCard = {
   id: string;
@@ -472,7 +473,7 @@ export default function Products() {
                   {/* Content */}
                   <div className="relative z-10 flex h-full flex-col p-6 md:p-7">
                     <div
-                      className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${service.color} transition-transform ${
+                      className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${UNIFIED_ICON_COLOR} transition-transform ${
                         isActive ? "scale-110" : "group-hover:scale-110"
                       }`}
                     >
@@ -528,7 +529,7 @@ export default function Products() {
                   <div className="rounded-[1.75rem] border border-white/70 bg-white/80 p-7 shadow-[0_18px_50px_-35px_rgba(15,23,42,0.35)] backdrop-blur dark:border-border/60 dark:bg-background/60 dark:shadow-none md:p-8">
                     <div className="flex items-center gap-4">
                       <div
-                        className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${selectedService.color} shadow-lg shadow-primary/15`}
+                        className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${UNIFIED_ICON_COLOR} shadow-lg shadow-primary/15`}
                       >
                         <selectedService.icon className="h-7 w-7 text-white" />
                       </div>
