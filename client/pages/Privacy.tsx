@@ -92,7 +92,7 @@ export default function Privacy() {
           title: "6. Weitergabe an Dienstleister",
           body: [
             "Wir können personenbezogene Daten an technische Dienstleister weitergeben, soweit dies für Hosting, Consent-Management, E-Mail-Kommunikation oder den sicheren Betrieb der Website erforderlich ist.",
-            "Soweit Dienstleister Daten außerhalb der Schweiz bearbeiten, erfolgt dies nur im Rahmen der anwendbaren datenschutzrechtlichen Vorgaben, etwa auf Basis von Angemessenheitsentscheidungen oder vertraglichen Garantien.",
+            "Soweit Dienstleister Daten ausserhalb der Schweiz bearbeiten, erfolgt dies nur im Rahmen der anwendbaren datenschutzrechtlichen Vorgaben, etwa auf Basis von Angemessenheitsentscheidungen oder vertraglichen Garantien.",
           ],
         },
         {

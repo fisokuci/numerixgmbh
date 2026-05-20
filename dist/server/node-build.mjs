@@ -1,11 +1,13 @@
-import path from "path";
+import path$1 from "path";
 import "dotenv/config";
 import * as express from "express";
 import express__default from "express";
 import cors from "cors";
 import { z } from "zod";
 import { Resend } from "resend";
-import { randomBytes } from "node:crypto";
+import { createHash, scryptSync, timingSafeEqual, randomBytes, createHmac } from "node:crypto";
+import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 const handleDemo = (req, res) => {
   const response = {
     message: "Hello from Express server"
@@ -193,13 +195,104 @@ const handleContact = async (req, res) => {
     });
   }
 };
+const SCRYPT_KEY_LENGTH = 64;
+const HASH_PREFIX = "scrypt";
+const DEFAULT_AUTH_FILE_PATH = path.join(
+  process.cwd(),
+  ".data",
+  "admin-auth.json"
+);
+const hashTokenVersion = (value) => createHash("sha256").update(value).digest("hex");
+const getAuthFilePath = () => (process.env.ADMIN_AUTH_FILE_PATH ?? DEFAULT_AUTH_FILE_PATH).trim();
+const hashPassword = (password) => {
+  const salt = randomBytes(16).toString("hex");
+  const hash = scryptSync(password, salt, SCRYPT_KEY_LENGTH).toString("hex");
+  return `${HASH_PREFIX}:${salt}:${hash}`;
+};
+const verifyPasswordHash = (password, passwordHash) => {
+  const [prefix, salt, expectedHash] = passwordHash.split(":");
+  if (prefix !== HASH_PREFIX || !salt || !expectedHash) return false;
+  const actualHash = scryptSync(password, salt, SCRYPT_KEY_LENGTH);
+  const expectedBuffer = Buffer.from(expectedHash, "hex");
+  if (actualHash.length !== expectedBuffer.length) return false;
+  return timingSafeEqual(actualHash, expectedBuffer);
+};
+const readStoredCredentials = () => {
+  const filePath = getAuthFilePath();
+  if (!filePath || !existsSync(filePath)) return null;
+  try {
+    const raw = readFileSync(filePath, "utf8");
+    const parsed = JSON.parse(raw);
+    if (parsed.version !== 1 || typeof parsed.username !== "string" || typeof parsed.passwordHash !== "string" || typeof parsed.updatedAt !== "string") {
+      return null;
+    }
+    return {
+      version: 1,
+      username: parsed.username.trim(),
+      passwordHash: parsed.passwordHash.trim(),
+      updatedAt: parsed.updatedAt
+    };
+  } catch (error) {
+    console.error("Failed to read admin auth file:", error);
+    return null;
+  }
+};
+const getAdminCredentials = () => {
+  const stored = readStoredCredentials();
+  if (stored?.username && stored.passwordHash) {
+    return {
+      configured: true,
+      username: stored.username,
+      passwordMatches: (password2) => verifyPasswordHash(password2.trim(), stored.passwordHash),
+      signingSecret: stored.passwordHash,
+      tokenVersion: hashTokenVersion(`${stored.username}:${stored.passwordHash}`),
+      source: "file"
+    };
+  }
+  const username = (process.env.ADMIN_USERNAME ?? "admin").trim();
+  const password = (process.env.ADMIN_PASSWORD ?? "").trim();
+  return {
+    configured: Boolean(password),
+    username,
+    passwordMatches: (candidate) => candidate.trim() === password,
+    signingSecret: password,
+    tokenVersion: password ? hashTokenVersion(`${username}:${password}`) : "",
+    source: "env"
+  };
+};
+const persistAdminPassword = (username, password) => {
+  const filePath = getAuthFilePath();
+  if (!filePath) {
+    throw new Error("No admin auth file path configured.");
+  }
+  const directory = path.dirname(filePath);
+  mkdirSync(directory, { recursive: true });
+  const payload = {
+    version: 1,
+    username: username.trim(),
+    passwordHash: hashPassword(password.trim()),
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  writeFileSync(filePath, JSON.stringify(payload, null, 2), "utf8");
+  return { filePath, updatedAt: payload.updatedAt };
+};
+const getAdminAuthStorePath = () => getAuthFilePath();
 const DEFAULT_UMAMI_SCRIPT_URL = "https://cloud.umami.is/script.js";
 const DEFAULT_SESSION_TTL_MINUTES = 8 * 60;
-const sessions = /* @__PURE__ */ new Map();
 const AdminLoginSchema = z.object({
   username: z.string().min(1),
   password: z.string().min(1)
 });
+const AdminChangePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8)
+}).refine(
+  ({ currentPassword, newPassword }) => currentPassword.trim() !== newPassword.trim(),
+  {
+    message: "New password must be different from the current password.",
+    path: ["newPassword"]
+  }
+);
 const parsePositiveInt = (value, fallback) => {
   const parsed = Number.parseInt(value ?? "", 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
@@ -208,16 +301,8 @@ const sessionTtlMinutes = parsePositiveInt(
   process.env.ADMIN_SESSION_TTL_MINUTES,
   DEFAULT_SESSION_TTL_MINUTES
 );
-const pruneExpiredSessions = () => {
-  const now = Date.now();
-  for (const [token, expiresAt] of sessions.entries()) {
-    if (expiresAt <= now) sessions.delete(token);
-  }
-};
-const getAdminCredentials = () => ({
-  username: (process.env.ADMIN_USERNAME ?? "admin").trim(),
-  password: (process.env.ADMIN_PASSWORD ?? "").trim()
-});
+const encodeBase64Url = (value) => Buffer.from(value, "utf8").toString("base64url");
+const decodeBase64Url = (value) => Buffer.from(value, "base64url").toString("utf8");
 const getUmamiConfig = () => {
   const websiteId = (process.env.VITE_UMAMI_WEBSITE_ID ?? process.env.UMAMI_WEBSITE_ID ?? "").trim();
   const scriptUrl = (process.env.VITE_UMAMI_SCRIPT_URL ?? process.env.UMAMI_SCRIPT_URL ?? DEFAULT_UMAMI_SCRIPT_URL).trim();
@@ -231,6 +316,176 @@ const getUmamiConfig = () => {
     shareUrl: shareUrl || void 0
   };
 };
+const signPayload = (payload, secret) => createHmac("sha256", secret).update(payload).digest("base64url");
+const createAdminToken = (username, signingSecret, tokenVersion) => {
+  const expiresAtMs = Date.now() + sessionTtlMinutes * 60 * 1e3;
+  const payload = encodeBase64Url(
+    JSON.stringify({
+      exp: expiresAtMs,
+      u: username,
+      v: tokenVersion
+    })
+  );
+  const signature = signPayload(payload, signingSecret);
+  return {
+    token: `${payload}.${signature}`,
+    expiresAt: new Date(expiresAtMs).toISOString()
+  };
+};
+const verifyAdminToken = (token) => {
+  const credentials = getAdminCredentials();
+  if (!credentials.configured || !credentials.signingSecret) return null;
+  const [payload, signature] = token.trim().split(".");
+  if (!payload || !signature) return null;
+  const expectedSignature = signPayload(payload, credentials.signingSecret);
+  const provided = Buffer.from(signature, "utf8");
+  const expected = Buffer.from(expectedSignature, "utf8");
+  if (provided.length !== expected.length) return null;
+  if (!timingSafeEqual(provided, expected)) return null;
+  try {
+    const parsed = JSON.parse(decodeBase64Url(payload));
+    if (typeof parsed.exp !== "number" || typeof parsed.u !== "string" || typeof parsed.v !== "string") {
+      return null;
+    }
+    if (parsed.exp <= Date.now()) return null;
+    if (parsed.u !== credentials.username) return null;
+    if (parsed.v !== credentials.tokenVersion) return null;
+    return {
+      expiresAt: new Date(parsed.exp).toISOString(),
+      umami: getUmamiConfig()
+    };
+  } catch {
+    return null;
+  }
+};
+const loginAdmin = (payload) => {
+  const parsed = AdminLoginSchema.safeParse(payload);
+  if (!parsed.success) {
+    return {
+      statusCode: 400,
+      body: {
+        ok: false,
+        message: "Invalid login payload."
+      }
+    };
+  }
+  const credentials = getAdminCredentials();
+  if (!credentials.configured) {
+    return {
+      statusCode: 503,
+      body: {
+        ok: false,
+        message: "Admin authentication is not configured."
+      }
+    };
+  }
+  const { username, password } = parsed.data;
+  if (username.trim() !== credentials.username || !credentials.passwordMatches(password)) {
+    return {
+      statusCode: 401,
+      body: {
+        ok: false,
+        message: "Invalid credentials."
+      }
+    };
+  }
+  const { token, expiresAt } = createAdminToken(
+    credentials.username,
+    credentials.signingSecret,
+    credentials.tokenVersion
+  );
+  return {
+    statusCode: 200,
+    body: {
+      ok: true,
+      message: "Authenticated.",
+      token,
+      expiresAt,
+      umami: getUmamiConfig()
+    }
+  };
+};
+const getAdminSession = (token) => {
+  const session = verifyAdminToken(token);
+  if (!session) {
+    return {
+      statusCode: 200,
+      body: {
+        authenticated: false
+      }
+    };
+  }
+  return {
+    statusCode: 200,
+    body: {
+      authenticated: true,
+      expiresAt: session.expiresAt,
+      umami: session.umami
+    }
+  };
+};
+const logoutAdmin = () => ({
+  statusCode: 200,
+  body: {
+    ok: true,
+    message: "Logged out."
+  }
+});
+const changeAdminPassword = (token, payload) => {
+  const session = verifyAdminToken(token);
+  if (!session) {
+    return {
+      statusCode: 401,
+      body: {
+        ok: false,
+        message: "Unauthorized."
+      }
+    };
+  }
+  const parsed = AdminChangePasswordSchema.safeParse(payload);
+  if (!parsed.success) {
+    return {
+      statusCode: 400,
+      body: {
+        ok: false,
+        message: parsed.error.issues[0]?.message ?? "Invalid payload."
+      }
+    };
+  }
+  const credentials = getAdminCredentials();
+  const { currentPassword, newPassword } = parsed.data;
+  if (!credentials.passwordMatches(currentPassword)) {
+    return {
+      statusCode: 401,
+      body: {
+        ok: false,
+        message: "Current password is incorrect."
+      }
+    };
+  }
+  try {
+    persistAdminPassword(credentials.username, newPassword);
+    return {
+      statusCode: 200,
+      body: {
+        ok: true,
+        message: "Password updated. Please sign in again."
+      }
+    };
+  } catch (error) {
+    console.error(
+      `Failed to persist admin password to ${getAdminAuthStorePath()}:`,
+      error
+    );
+    return {
+      statusCode: 500,
+      body: {
+        ok: false,
+        message: "Password could not be saved on this server. Configure a persistent admin auth store for this deployment."
+      }
+    };
+  }
+};
 const getRequestToken = (req) => {
   const authHeader = req.header("authorization") ?? "";
   if (authHeader.toLowerCase().startsWith("bearer ")) {
@@ -240,72 +495,24 @@ const getRequestToken = (req) => {
   const headerToken = (req.header("x-admin-token") ?? "").trim();
   return headerToken || "";
 };
-const getValidSession = (req) => {
-  pruneExpiredSessions();
-  const token = getRequestToken(req);
-  if (!token) return null;
-  const expiresAtMs = sessions.get(token);
-  if (!expiresAtMs) return null;
-  if (expiresAtMs <= Date.now()) {
-    sessions.delete(token);
-    return null;
-  }
-  return { token, expiresAtMs };
-};
 const handleAdminLogin = (req, res) => {
-  const parsed = AdminLoginSchema.safeParse(req.body);
-  if (!parsed.success) {
-    return res.status(400).json({
-      ok: false,
-      message: "Invalid login payload."
-    });
-  }
-  const { username: expectedUsername, password: expectedPassword } = getAdminCredentials();
-  if (!expectedPassword) {
-    return res.status(503).json({
-      ok: false,
-      message: "Admin authentication is not configured."
-    });
-  }
-  const { username, password } = parsed.data;
-  if (username !== expectedUsername || password !== expectedPassword) {
-    return res.status(401).json({
-      ok: false,
-      message: "Invalid credentials."
-    });
-  }
-  pruneExpiredSessions();
-  const token = randomBytes(32).toString("hex");
-  const expiresAtMs = Date.now() + sessionTtlMinutes * 60 * 1e3;
-  sessions.set(token, expiresAtMs);
-  return res.status(200).json({
-    ok: true,
-    message: "Authenticated.",
-    token,
-    expiresAt: new Date(expiresAtMs).toISOString(),
-    umami: getUmamiConfig()
-  });
+  const result = loginAdmin(req.body);
+  return res.status(result.statusCode).json(result.body);
 };
 const handleAdminSession = (req, res) => {
-  const session = getValidSession(req);
-  if (!session) {
-    return res.status(200).json({
-      authenticated: false
-    });
-  }
-  return res.status(200).json({
-    authenticated: true,
-    expiresAt: new Date(session.expiresAtMs).toISOString(),
-    umami: getUmamiConfig()
-  });
+  const result = getAdminSession(getRequestToken(req));
+  return res.status(result.statusCode).json(result.body);
 };
-const handleAdminLogout = (req, res) => {
-  const token = getRequestToken(req);
-  if (token) sessions.delete(token);
-  return res.status(200).json({
-    ok: true,
-    message: "Logged out."
-  });
+const handleAdminLogout = (_req, res) => {
+  const result = logoutAdmin();
+  return res.status(result.statusCode).json(result.body);
+};
+const handleAdminChangePassword = (req, res) => {
+  const result = changeAdminPassword(
+    getRequestToken(req),
+    req.body
+  );
+  return res.status(result.statusCode).json(result.body);
 };
 function createServer() {
   const app2 = express__default();
@@ -321,6 +528,7 @@ function createServer() {
   app2.post("/api/admin/login", handleAdminLogin);
   app2.get("/api/admin/session", handleAdminSession);
   app2.post("/api/admin/logout", handleAdminLogout);
+  app2.post("/api/admin/password", handleAdminChangePassword);
   app2.use("/api", (_req, res) => {
     res.status(404).json({ ok: false, message: "Not found" });
   });
@@ -335,13 +543,13 @@ function createServer() {
 const app = createServer();
 const port = process.env.PORT || 3e3;
 const __dirname = import.meta.dirname;
-const distPath = path.join(__dirname, "../spa");
+const distPath = path$1.join(__dirname, "../spa");
 app.use(express.static(distPath));
 app.get("*", (req, res) => {
   if (req.path.startsWith("/api/") || req.path.startsWith("/health")) {
     return res.status(404).json({ error: "API endpoint not found" });
   }
-  res.sendFile(path.join(distPath, "index.html"));
+  res.sendFile(path$1.join(distPath, "index.html"));
 });
 app.listen(port, () => {
   console.log(`🚀 Fusion Starter server running on port ${port}`);

@@ -31,7 +31,7 @@ export default function Index() {
         {
           title: "Begleitung",
           description:
-            "Regelmäßige Reviews und klare Kommunikation auf Augenhöhe.",
+            "Regelmässige Reviews und klare Kommunikation auf Augenhöhe.",
         },
       ],
       ctaTitle: "Bereit für den ersten Schritt?",

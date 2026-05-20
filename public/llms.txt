@@ -1,0 +1,28 @@
+# Numerix GmbH
+> Numerix GmbH in Pratteln: digitale Treuhand-, Finanz- und Unternehmensberatung für Schweizer KMU, Start-ups, Unternehmerinnen, Unternehmer und Privatpersonen.
+
+Numerix GmbH ist eine Schweizer Beratungsgesellschaft mit Sitz an der Bahnhofstrasse 16, 4133 Pratteln. Das Unternehmen unterstützt Kundinnen und Kunden mit digitalen Prozessen, transparenter Beratung und verlässlicher Administration in den Bereichen Treuhand, Rechnungswesen, Controlling, Steuern, Unternehmensberatung, HR-Administration, Versicherungen, Sozialversicherungen, Vorsorge und Nachlassplanung.
+
+## Leistungen
+- Unternehmensberatung für Gründung, Aufbau, Führung, Steuerung, Wachstum und organisatorische Struktur.
+- Rechnungswesen und Controlling mit digitaler Buchhaltung, monatlichen Auswertungen, Budgetierung, Forecasts und Kostenkontrolle.
+- Steuerberatung für KMU, Steuerplanung, MWST, Steuererklärungen und Begleitung bei Rückfragen von Behörden.
+- Treuhand und HR-Administration inklusive Lohnbuchhaltung, Personaladministration, laufender Buchführung und Jahresabschluss.
+- Versicherungen und Sozialversicherungen für KMU und Privatpersonen, inklusive Analyse bestehender Policen und Einbettung in Lohn- und HR-Prozesse.
+- Vorsorge- und Nachlassplanung für Unternehmerinnen, Unternehmer, Familien und Unternehmensnachfolgen.
+
+## Pages
+- [Startseite](/): Überblick über Numerix GmbH, digitale Treuhandberatung, Arbeitsweise und Anfrage-Start.
+- [Anfrage starten](/#/anfrage-starten): Geführte Anfrage für passende Anliegen und Kontaktaufnahme.
+- [Dienstleistungen](/#/dienstleistungen): Details zu Unternehmensberatung, Rechnungswesen, Controlling, Steuern, Versicherungen, Vorsorge, Nachlassplanung, Treuhand und HR-Administration.
+- [Über uns](/#/uber-uns): Informationen zu Numerix GmbH, digitaler Arbeitsweise, persönlicher Finanzpartnerschaft und Erfahrung.
+- [Formulare](/#/formulare): Dokumentvorlagen und Formulare für Kundenaufnahme, Mandat, Datenschutz, Vollmacht, Finanzen, HR, Steuern und Versicherungsanalyse.
+- [Kontakt](/#/kontakt): Kontaktformular, Adresse, Telefonnummer, E-Mail-Adresse und Öffnungszeiten.
+- [Impressum](/#/impressum): Unternehmensangaben, Adresse, Kontakt, UID und Registerdaten der Numerix GmbH.
+- [Datenschutzerklärung](/#/datenschutz): Informationen zur Datenverarbeitung, Kontaktformular, Cookiebot, Umami Analytics, Cookies, Rechte und Datenschutzkontakt.
+
+## Kontakt
+- Adresse: Numerix GmbH, Bahnhofstrasse 16, 4133 Pratteln, Schweiz
+- Telefon: +41 79 833 37 33
+- E-Mail: info@numerixgmbh.ch
+- Website: https://numerixgmbh.ch

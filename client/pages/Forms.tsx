@@ -39,7 +39,7 @@ export default function Forms() {
         },
         {
           title: "Datenschutzerklärung",
-          description: "Datenschutzmitteilung gemäß geltenden Bestimmungen.",
+          description: "Datenschutzmitteilung gemäss geltenden Bestimmungen.",
           category: "Compliance",
           color: "bg-green-500/20 text-green-700",
           href: "/#/datenschutz",
